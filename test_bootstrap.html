@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <style>
+         /*    --------------------------------------------------
+            :: General
+            -------------------------------------------------- */
+         body {
+             font-family: 'Open Sans', sans-serif;
+             color: #353535;
+         }
+         .content h1 {
+             text-align: center;
+         }
+         .content .content-footer p {
+             color: #6d6d6d;
+             font-size: 12px;
+             text-align: center;
+         }
+         .content .content-footer p a {
+             color: inherit;
+             font-weight: bold;
+         }
+
+         /*	--------------------------------------------------
+            :: Table Filter
+            -------------------------------------------------- */
+         .panel {
+             border: 1px solid #ddd;
+             background-color: #fcfcfc;
+         }
+         .panel .btn-group {
+             margin: 15px 0 30px;
+         }
+         .panel .btn-group .btn {
+             transition: background-color .3s ease;
+         }
+         .table-filter {
+             background-color: #fff;
+             border-bottom: 1px solid #eee;
+         }
+         .table-filter tbody tr:hover {
+             cursor: pointer;
+             background-color: #eee;
+         }
+         .table-filter tbody tr td {
+             padding: 10px;
+             vertical-align: middle;
+             border-top-color: #eee;
+         }
+         .table-filter tbody tr.selected td {
+             background-color: #eee;
+         }
+         .table-filter tr td:first-child {
+             width: 38px;
+         }
+         .table-filter tr td:nth-child(2) {
+             width: 35px;
+         }
+         .ckbox {
+             position: relative;
+         }
+         .ckbox input[type="checkbox"] {
+             opacity: 0;
+         }
+         .ckbox label {
+             -webkit-user-select: none;
+             -moz-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+         }
+         .ckbox label:before {
+             content: '';
+             top: 1px;
+             left: 0;
+             width: 18px;
+             height: 18px;
+             display: block;
+             position: absolute;
+             border-radius: 2px;
+             border: 1px solid #bbb;
+             background-color: #fff;
+         }
+         .ckbox input[type="checkbox"]:checked + label:before {
+             border-color: #2BBCDE;
+             background-color: #2BBCDE;
+         }
+         .ckbox input[type="checkbox"]:checked + label:after {
+             top: 3px;
+             left: 3.5px;
+             content: '\e013';
+             color: #fff;
+             font-size: 11px;
+             font-family: 'Glyphicons Halflings';
+             position: absolute;
+         }
+         .table-filter .star {
+             color: #ccc;
+             text-align: center;
+             display: block;
+         }
+         .table-filter .star.star-checked {
+             color: #F0AD4E;
+         }
+         .table-filter .star:hover {
+             color: #ccc;
+         }
+         .table-filter .star.star-checked:hover {
+             color: #F0AD4E;
+         }
+         .table-filter .media-photo {
+             width: 35px;
+         }
+         .table-filter .media-body {
+             /* Had to use this style to force the div to expand (wasn't necessary with my bootstrap version 3.3.6) */
+             /* display: block; */
+         }
+         .table-filter .media-meta {
+             font-size: 11px;
+             color: #999;
+         }
+         .table-filter .media .title {
+             color: #2BBCDE;
+             font-size: 14px;
+             font-weight: bold;
+             line-height: normal;
+             margin: 0;
+         }
+         .table-filter .media .title span {
+             font-size: .8em;
+             margin-right: 20px;
+         }
+         .table-filter .media .title span.started {
+             color: #5cb85c;
+         }
+         .table-filter .media .title span.pending {
+             color: #f0ad4e;
+         }
+         .table-filter .media .title span.aborted {
+             color: #d9534f;
+         }
+         .table-filter .media .summary {
+             font-size: 14px;
+         }
+        </style>
+        <style>
+     .node {
+         cursor: pointer;
+     }
+
+     .node circle {
+         fill: #fff;
+         stroke: steelblue;
+         stroke-width: 3px;
+         border-radius: 100px;
+         r: 10px;
+     }
+
+     .node text {
+         font: 20px sans-serif;
+     }
+
+     .link {
+         fill: none;
+         stroke: #ccc;
+         stroke-width: 3px;
+     }
+    </style>
+    </head>
+
+    <body>
+        <script>
+         var array = {{ todo_json }};
+
+         $(document).ready(function(){
+             jQuery.each(array, function(i, item) {
+                 $("[name='task-list']").append(
+                     '<tr data-status=' + item['status'] + '>' +
+                     '<td>' +
+                     '<div class="ckbox">' +
+                     '<input type="checkbox" id="checkbox3">' +
+                     '<label for="checkbox3"></label>' +
+                     '</div>' +
+                     '</td>' +
+                     '<td>' +
+                     '<a href="javascript:;" class="star">' +
+                     '<i class="glyphicon glyphicon-star"></i>' +
+                     '</a>' +
+                     '</td>' +
+                     '<td>' +
+                     '<div class="media">' +
+                     '<div class="media-body">' +
+                     /* '<span class="media-meta pull-right">Febrero 13, 2016</span>' +*/
+                     '<h4 class="title">' +
+                     '<span class="pull-left ' + item['status'] + '">(' + item['status'] + ')</span>' +
+                     '<span>' + item['heading'] + '</span>' +
+                     '</h4>' +
+                     /* '<p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>' +*/
+                     '</div>' +
+                     '</div>' +
+                     '</td>' +
+                     '</tr>'
+                 )
+             });
+         });
+
+         $(document).ready(function () {
+
+             $('.star').on('click', function () {
+                 $(this).toggleClass('star-checked');
+             });
+
+             $('.ckbox label').on('click', function () {
+                 $(this).parents('tr').toggleClass('selected');
+             });
+
+             $('.btn-filter').on('click', function () {
+                 var $target = $(this).data('target');
+                 if ($target != 'all') {
+                     $('.table tr').css('display', 'none');
+                     $('.table tr[data-status="' + $target + '"]').fadeIn('slow');
+                 } else {
+                     $('.table tr').css('display', 'none').fadeIn('slow');
+                 }
+             });
+
+         });
+        </script>
+        <span class="container pull-left">
+            <div class="row">
+
+                <section class="content">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="pull-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-success btn-filter" data-target="started">Started</button>
+                                        <button type="button" class="btn btn-warning btn-filter" data-target="pending">Pending</button>
+                                        <button type="button" class="btn btn-danger btn-filter" data-target="aborted">Aborted</button>
+                                        <button type="button" class="btn btn-default btn-filter" data-target="all">Todos</button>
+                                    </div>
+                                </div>
+                                <div class="table-container">
+                                    <table class="table table-filter">
+                                        <tbody name="task-list" >
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-footer">
+                            <p>
+                                Page © - 2016 <br>
+                                Powered By <a href="https://www.facebook.com/tavo.qiqe.lucero" target="_blank">TavoQiqe</a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </span>
+        <span name="tree-canvas">
+        </span>
+        <script>
+       var treeData = {{ mindmap_json }};
+
+
+       // ************** Generate the tree diagram  *****************
+       var margin = {top: 20, right: 120, bottom: 20, left: 120},
+           width = 5400 - margin.right - margin.left,
+           height = 1020 - margin.top - margin.bottom;
+
+       var i = 0,
+           duration = 750,
+           root;
+
+       var tree = d3.layout.tree()
+                    .size([height, width]);
+
+       var diagonal = d3.svg.diagonal()
+                        .projection(function(d) { return [d.y, d.x]; });
+
+       var svg = d3.select("[name=tree-canvas]").append("svg")
+                   .attr("width", width + margin.right + margin.left)
+                   .attr("height", height + margin.top + margin.bottom)
+                   .append("g")
+                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+       root = treeData[0];
+       root.x0 = height / 2;
+       root.y0 = 0;
+
+       update(root);
+
+       d3.select(self.frameElement).style("height", "500px");
+
+       function update(source) {
+
+           // Compute the new tree layout.
+           var nodes = tree.nodes(root).reverse(),
+               links = tree.links(nodes);
+
+           // Normalize for fixed-depth.
+           nodes.forEach(function(d) { d.y = d.depth * 380; });
+
+           // Update the nodes…
+           var node = svg.selectAll("g.node")
+                         .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+           // Enter any new nodes at the parent's previous position.
+           var nodeEnter = node.enter().append("g")
+                               .attr("class", "node")
+                               .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                               .on("click", click);
+
+           nodeEnter.append("circle")
+                    .attr("r", 1e-6)
+                    .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+           nodeEnter.append("text")
+                    .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                    .text(function(d) { return d.name; })
+                    .style("fill-opacity", 1e-6);
+
+           // Transition nodes to their new position.
+           var nodeUpdate = node.transition()
+                                .duration(duration)
+                                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+           nodeUpdate.select("circle")
+                     .attr("r", 10)
+                     .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+
+           nodeUpdate.select("text")
+                     .style("fill-opacity", 1);
+
+           // Transition exiting nodes to the parent's new position.
+           var nodeExit = node.exit().transition()
+                              .duration(duration)
+                              .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                              .remove();
+
+           nodeExit.select("circle")
+                   .attr("r", 1e-6);
+
+           nodeExit.select("text")
+                   .style("fill-opacity", 1e-6);
+
+           // Update the links…
+           var link = svg.selectAll("path.link")
+                         .data(links, function(d) { return d.target.id; });
+
+           // Enter any new links at the parent's previous position.
+           link.enter().insert("path", "g")
+               .attr("class", "link")
+               .attr("d", function(d) {
+                   var o = {x: source.x0, y: source.y0};
+                   return diagonal({source: o, target: o});
+               });
+
+           // Transition links to their new position.
+           link.transition()
+               .duration(duration)
+               .attr("d", diagonal);
+
+           // Transition exiting nodes to the parent's new position.
+           link.exit().transition()
+               .duration(duration)
+               .attr("d", function(d) {
+                   var o = {x: source.x, y: source.y};
+                   return diagonal({source: o, target: o});
+               })
+               .remove();
+
+           // Stash the old positions for transition.
+           nodes.forEach(function(d) {
+               d.x0 = d.x;
+               d.y0 = d.y;
+           });
+       }
+
+       // Toggle children on click.
+       function click(d) {
+           if (d.children) {
+               d._children = d.children;
+               d.children = null;
+           } else {
+               d.children = d._children;
+               d._children = null;
+           }
+           update(d);
+       }
+
+      </script>
+    </body>
+</html>
