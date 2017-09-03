@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 from pprint import pprint
 from Queue import Queue
 from PyOrgMode import PyOrgMode
@@ -45,7 +46,8 @@ tmpl_f = open('test_bootstrap.html')
 tmpl_txt = tmpl_f.read()
 
 tmpl = Template(tmpl_txt.decode('utf-8'))
-result = tmpl.render(mindmap_json=[mindmap], todo_json=todo)
+result = tmpl.render(mindmap_json=('[' + json.dumps(mindmap, ensure_ascii=False) + "]").decode('utf-8'),
+                     todo_json=json.dumps(todo, ensure_ascii=False).decode('utf-8'))
 
 out_f = open('out.html', 'w')
 out_f.write(result.encode('utf-8'))
