@@ -7,6 +7,7 @@ from PyOrgMode import PyOrgMode
 from jinja2 import Template
 
 base = PyOrgMode.OrgDataStructure()
+base.set_todo_states(['TODO', 'STARTED', 'WAITING', '|', 'DONE', 'ABORTED', 'SUSPENDED'])
 base.load_from_file('./inbox.org')
 root = base.root
 
