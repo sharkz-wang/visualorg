@@ -321,7 +321,7 @@
            nodeEnter.append("circle")
                     .attr("r", 1e-6)
                     .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
-                    .style("stroke", function(d) { return d.todo ? "mediumpurple" : "lightsteelblue"; });
+                    .style("stroke", function(d) { return d.todo ? (d.todo == 'DONE' ? "lightgray" : "mediumpurple") : "lightsteelblue"; });
 
            nodeEnter.append("text")
                     .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
@@ -338,7 +338,7 @@
            nodeUpdate.select("circle")
                      .attr("r", 10)
                      .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; })
-                     .style("stroke", function(d) { return d.todo ? "mediumpurple" : "lightsteelblue"; });
+                     .style("stroke", function(d) { return d.todo ? (d.todo == 'DONE' ? "lightgray" : "mediumpurple") : "lightsteelblue"; });
 
            nodeUpdate.select("text")
                      .style("fill-opacity", 1);
