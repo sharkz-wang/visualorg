@@ -46,6 +46,7 @@ def tree2dict(root, get_nodes):
 
     return (ret_mindmap, ret_todo_list)
 
+root.heading = '/'
 (mindmap, todo) = tree2dict(root, lambda n: filter(is_node, n.content))
 
 tmpl_f = open('test_bootstrap.html')
