@@ -23,10 +23,11 @@ def tree2dict(root, get_nodes):
     ret_mindmap['name'] = root.heading
 
     if hasattr(root, 'todo'):
-        ret_todo = dict()
-        ret_todo['status'] = root.todo
-        ret_todo['heading'] = root.heading
-        ret_todo_list.append(ret_todo)
+        if root.todo == 'SCHEDULED':
+            ret_todo = dict()
+            ret_todo['status'] = root.todo
+            ret_todo['heading'] = root.heading
+            ret_todo_list.append(ret_todo)
 
         ret_mindmap['todo'] = root.todo
         ret_mindmap['name'] = "[" + root.todo.lower() + "] " + ret_mindmap['name']
