@@ -68,13 +68,14 @@ def tree2dict(root, get_nodes, project_subtree=False):
 
     if project_subtree and (start_ts_ms or end_ts_ms):
 
+        start_is_milestone = False
         end_is_milestone = False
         if not start_ts_ms and end_ts_ms:
             start_ts_ms = end_ts_ms
             end_is_milestone = True
         if start_ts_ms and not end_ts_ms:
             end_ts_ms = start_ts_ms
-            end_is_milestone = True
+            start_is_milestone = True
 
         ms_per_day = 24*60*60*1000
         duration_date_ts_list = range(start_ts_ms, end_ts_ms + ms_per_day, ms_per_day)
@@ -103,8 +104,8 @@ def tree2dict(root, get_nodes, project_subtree=False):
             "duration": (duration
                          if start_ts_ms and end_ts_ms else
                          0),
-            "startIsMilestone": False,
-            "endIsMilestone": False,
+            "startIsMilestone": start_is_milestone,
+            "endIsMilestone": end_is_milestone,
             "collapsed": False,
             "assigs": [],
             "hasChild": True
