@@ -3,6 +3,7 @@
 from PyOrgMode.PyOrgMode import OrgDataStructure
 from PyOrgMode.PyOrgMode import OrgDrawer
 from PyOrgMode.PyOrgMode import OrgElement
+from datetime import datetime
 import json
 import time
 import math
@@ -16,7 +17,7 @@ base = OrgDataStructure()
 base.set_todo_states(['TODO', 'STARTED', 'WAITING', 'SCHEDULED',
                       '|',
                       'DONE', 'ABORTED', 'SUSPENDED'])
-base.load_from_file('./inbox.org')
+base.load_from_file('../inbox.org')
 root = base.root
 
 is_node = lambda x: isinstance(x, OrgElement) and 'heading' in x.__dict__
@@ -75,6 +76,14 @@ def tree2dict(root, get_nodes, project_subtree=False):
             end_ts_ms = start_ts_ms
             end_is_milestone = True
 
+        ms_per_day = 24*60*60*1000
+        duration_date_ts_list = range(start_ts_ms, end_ts_ms + ms_per_day, ms_per_day)
+        duration_date_list = map(lambda x: datetime.fromtimestamp(x/1000), duration_date_ts_list)
+        duration_weekday_list = map(lambda x: x.weekday(), duration_date_list)
+
+        # twproject gantt ignores weekends when counting duration
+        duration = len(filter(lambda x: x < 5, duration_weekday_list))
+
         ret_gantt.append({
             "id": node_id,
             "name": root.heading,
@@ -91,7 +100,7 @@ def tree2dict(root, get_nodes, project_subtree=False):
             "canWrite": True,
             "start": (start_ts_ms if start_ts_ms else ""),
             "end": (end_ts_ms if end_ts_ms else ""),
-            "duration": (math.ceil((end_ts_ms - start_ts_ms)/1000/60/60/24)
+            "duration": (duration
                          if start_ts_ms and end_ts_ms else
                          0),
             "startIsMilestone": False,
@@ -162,7 +171,7 @@ tmpl = Template(tmpl_txt.decode('utf-8'))
 result = tmpl.render(mindmap_json=('[' + json.dumps(mindmap, ensure_ascii=False) + "]").decode('utf-8'),
                      todo_json=json.dumps(todo, ensure_ascii=False).decode('utf-8'))
 
-out_f = open('out.html', 'w')
+out_f = open('../out.html', 'w')
 out_f.write(result.encode('utf-8'))
 
 tmpl_f.close()
