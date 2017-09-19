@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html" />
+<title>Timeglider jQuery Plugin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8" />
+
+
+<link rel="stylesheet" href="css/docs.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+
+<link rel="stylesheet" href="css/jquery-ui-1.8.5.custom.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+<link rel="stylesheet" href="timeglider/Timeglider.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+ 
+<link rel="stylesheet" href="docs-style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+<style type='text/css'>
+		
+		#placement {
+			margin:32px;
+			margin-bottom:0;
+			height:600px;
+		}
+		
+</style>
+
+
+</head>
+<body class='sample'>
+
+
+<div class='tg-sample-header'>
+<h1>Timeglider Widget: Presentation</h1>
+<p>A "presentation" is a timeline widget displaying two or more timelines simultaneously.</p>
+</div>
+
+
+
+
+<div id='placement'></div>
+
+<button id='reload'>RELOAD</button>
+
+
+<p>Along with some presentation metadata, multiple timelines can be loaded in in the data_source (JSON) array:
+
+<pre>
+{
+"presentation":"Timeglider",
+"title":"My Presentation",
+"description":"Description of combined timelines",
+"open_modal":true,
+"initial_zoom":49,
+"image_lane_height":100,
+"focus_date":"1950-06-12 12:00:00",
+"initial_timelines":["mr_life", "hj_life"],
+"timelines":[
+   {"id":"us_general", "title":"U.S. History",..."events":[...]},
+   {"id":"idaho", "title":"History of Idaho",..."events":[...]},
+]
+}
+</pre>
+<p>Take a look at <a target='_blank' href='json/presentation.json'>the JSON for this presentation.</a></p>
+
+<p>Timelines can be (using a "bottom" property), and inverted (either true or false) such that two timelines can be "bookmatched" with inverted timelines being laid out from top to bottom, and positioned below a timeline with the default (non-inverted) bottom-up placement of events.</p>
+
+
+
+
+</div>
+
+	
+	<script src="js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<!-- jquery-1.9.1.min.js  OR  jquery-1.10.1.min.js -->
+	<script src="js/jquery-ui-1.10.3.custom.min.js" type="text/javascript" charset="utf-8"></script>
+	
+	
+	
+	<script src="js/underscore-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/backbone-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.tmpl.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ba-debug.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/ba-tinyPubSub.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.mousewheel.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.ui.ipad.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/globalize.js" type="text/javascript" charset="utf-8"></script>	
+	
+	
+	
+	<script src="timeglider/TG_Date.js" type="text/javascript" charset="utf-8"></script>
+	<script src="timeglider/TG_Org.js" type="text/javascript" charset="utf-8"></script>
+	<script src="timeglider/TG_Timeline.js" type="text/javascript" charset="utf-8"></script> 
+	<script src="timeglider/TG_TimelineView.js" type="text/javascript" charset="utf-8"></script>
+	<script src="timeglider/TG_Mediator.js" type="text/javascript" charset="utf-8"></script> 
+	<script src="timeglider/timeglider.timeline.widget.js" type="text/javascript"></script>
+	
+	<script src="timeglider/timeglider.datepicker.js" type="text/javascript"></script>
+
+	
+	<script src="js/jquery.jscrollpane.min.js" type="text/javascript"></script>
+
+
+
+
+	
+	<!-- TESTING -->
+
+  <script type='text/javascript'>
+  
+  /*
+  	window.namespacer = {
+		clickCallback:function(obj) {
+			alert("hello");
+		}
+	}
+	*/
+	$(function () { 
+		
+		
+		var tg1 = $("#placement").timeline({
+				"timezone":"-07:00",
+				"min_zoom":1, 
+				"max_zoom":60, 
+				"show_centerline":true,
+				"data_source":"json/presentation.json",
+				"show_footer":true,
+				"icon_folder":"timeglider/icons/",
+				"display_zoom_level":true			
+		}).resizable({
+			stop:function(){ 
+				$(this).data("timeline").resize();
+			}
+		});
+	
+	
+		var tg_actor = tg1.data("timeline");
+		
+		
+		$(".goto").click(function() {
+			var d = $(this).attr("date");
+			var z = $(this).attr("zoom");
+			tg_actor.goTo(d,z);
+		});
+		
+		$(".zoom").click(function() {
+			var z = Number($(this).attr("z"));
+			tg_actor.zoom(z);
+		});
+		
+		tg_actor.panButton($(".pan-left"), "left");
+		tg_actor.panButton($(".pan-right"), "right");
+		
+		
+		$("#loadData").click(function() {
+			var src = $("#loadDataSrc").val();
+			tg_actor.load(src);
+		});
+		
+		
+		
+		$("#reload").on("click", function() { 
+			
+			var callme = function() {
+				alert('data reloaded.');
+			}
+			
+			tg_actor.reloadTimeline({id:"us_general", source:"json/presentation.json", call_this:callme});
+			
+		});
+		
+		
+		
+		
+		
+		
+		// we need to use a deferred event listener here since
+		// this stuff is constantly re-painted in the DOM
+		$("#placement").on("click", ".timeline-title", function() {
+			var timeline_id = $(this).closest(".tg-timeline-envelope").attr("id");
+
+			// get timeline to see what its display [expanded|collapsed] is:
+			var tl = mediator.timelineCollection.get(timeline_id)
+			
+			// Backbone object; use ".get" to get properties
+			var display = tl.get("display")
+			var inverted = tl.get("inverted");
+			
+			if (display == "expanded") {
+				tl.set({display:"collapsed"});
+				mediator.refresh();
+			} else if (display == "collapsed") {
+				tl.set({display:"expanded"});
+				mediator.refresh();
+			}
+			
+			
+		});
+	
+		
+		
+		
+		
+				
+		}); // end document-ready
+    
+    
+ 
+	
+</script>
+
+<script src='js/tg-sample-nav.js' type='text/javascript'></script>
+
+</body>
+</html>
+
+
