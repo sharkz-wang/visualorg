@@ -63,6 +63,10 @@ def tree2dict(root, get_nodes, project_subtree=False):
     ret_mindmap = dict()
     ret_todo_list = []
     ret_gantt = []
+    ret_timeline = {
+        'events': [],
+        'legends': []
+    }
 
     ret_mindmap['name'] = root.heading
 
@@ -109,6 +113,25 @@ def tree2dict(root, get_nodes, project_subtree=False):
             "hasChild": True
             })
 
+        ret_timeline['events'].append({
+            "id": node_id,
+            "title": root.heading,
+            "description": "",
+            "startdate": (datetime.fromtimestamp(start_ts_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
+                          if start_ts_ms
+                          else ""),
+            "enddate": (datetime.fromtimestamp(end_ts_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
+                        if end_ts_ms
+                        else ""),
+            "high_threshold": 50,
+            "importance": "30",
+            "image": "",
+            "link": "",
+            "date_display": "yes",
+            "icon": "circle_green.png",
+            "tags": ""
+            })
+
 
     if hasattr(root, 'todo'):
         if root.todo == 'SCHEDULED':
@@ -126,9 +149,9 @@ def tree2dict(root, get_nodes, project_subtree=False):
     ret_mindmap['children'] = []
 
     for node in get_nodes(root):
-        (_mdmp, _todo_lsit, _gantt_list) = tree2dict(node,
-                                                     get_nodes,
-                                                     project_subtree)
+        (_mdmp, _todo_lsit, _gantt_list, _timeline) = tree2dict(node,
+                                                                get_nodes,
+                                                                project_subtree)
         if project_subtree:
             for it in enumerate(_gantt_list):
                 idx = it[0]
@@ -140,13 +163,15 @@ def tree2dict(root, get_nodes, project_subtree=False):
         ret_todo_list = ret_todo_list + _todo_lsit
         ret_mindmap['children'].append(_mdmp)
 
+        ret_timeline['events'] = _timeline['events'] + ret_timeline['events']
+
     if not ret_mindmap['children']:
         del ret_mindmap['children']
 
-    return (ret_mindmap, ret_todo_list, ret_gantt)
+    return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
 
 root.heading = '/'
-(mindmap, todo, gantt) = tree2dict(root, lambda n: filter(is_node, n.content))
+(mindmap, todo, gantt, timeline) = tree2dict(root, lambda n: filter(is_node, n.content))
 
 custom_gantt_id_map_tb = dict()
 
@@ -183,6 +208,18 @@ tmpl = Template(tmpl_txt.decode('utf-8'))
 result = tmpl.render(gantt_json=json.dumps(gantt, ensure_ascii=False).decode('utf-8'))
 
 out_f = open('./twproject_gantt/gantt.html', 'w')
+out_f.write(result.encode('utf-8'))
+
+tmpl_f.close()
+out_f.close()
+
+tmpl_f = open('./timeglider/full_window_tmpl.html')
+tmpl_txt = tmpl_f.read()
+
+tmpl = Template(tmpl_txt.decode('utf-8'))
+result = tmpl.render(timeline_events=json.dumps(timeline['events'], ensure_ascii=False).decode('utf-8'))
+
+out_f = open('./timeglider/full_window.html', 'w')
 out_f.write(result.encode('utf-8'))
 
 tmpl_f.close()
