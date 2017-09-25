@@ -94,8 +94,6 @@ $(function() {
 
   ge.loadProject(project);
   ge.checkpoint(); //empty the undo stack
-
-  ge.editor.element.oneTime(100, "cl", function () {$(this).find("tr.emptyRow:first").click()});
 });
 
 
