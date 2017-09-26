@@ -12,6 +12,7 @@ from Queue import Queue
 from jinja2 import Template
 
 project_subtree_tag = 'Project'
+milestone_tag = 'Milestone'
 
 base = OrgDataStructure()
 base.set_todo_states(['TODO', 'STARTED', 'WAITING', 'SCHEDULED',
@@ -25,6 +26,8 @@ is_node = lambda x: isinstance(x, OrgElement) and 'heading' in x.__dict__
 def tree2dict(root, get_nodes, project_subtree=False):
 
     project_subtree = project_subtree or project_subtree_tag in root.tags
+    is_project = project_subtree_tag in root.tags
+    is_milestone = milestone_tag in root.tags
 
     # chomp trailing whitespaces
     root.heading = root.heading.rstrip()
@@ -113,24 +116,25 @@ def tree2dict(root, get_nodes, project_subtree=False):
             "hasChild": True
             })
 
-        ret_timeline['events'].append({
-            "id": node_id,
-            "title": root.heading,
-            "description": "",
-            "startdate": (datetime.fromtimestamp(start_ts_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
-                          if start_ts_ms
-                          else ""),
-            "enddate": (datetime.fromtimestamp(end_ts_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
-                        if end_ts_ms
-                        else ""),
-            "high_threshold": 50,
-            "importance": "30",
-            "image": "",
-            "link": "",
-            "date_display": "yes",
-            "icon": "circle_green.png",
-            "tags": ""
-            })
+        if is_project or is_milestone:
+            ret_timeline['events'].append({
+                "id": node_id,
+                "title": root.heading if not is_project else root.heading + ' done',
+                "description": "",
+                "startdate": (datetime.fromtimestamp(start_ts_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
+                            if start_ts_ms and not is_project
+                              else datetime.fromtimestamp(end_ts_ms/1000).strftime('%Y-%m-%d %H:%M:%S')),
+                "enddate": (datetime.fromtimestamp(end_ts_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
+                            if end_ts_ms
+                            else ""),
+                "high_threshold": 50,
+                "importance": "30",
+                "image": "",
+                "link": "",
+                "date_display": "yes",
+                "icon": "triangle_green.png" if not is_project else "flag_red.png",
+                "tags": ""
+                })
 
 
     if hasattr(root, 'todo'):
