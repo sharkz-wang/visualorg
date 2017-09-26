@@ -195,7 +195,7 @@ tmpl = Template(tmpl_txt.decode('utf-8'))
 result = tmpl.render(mindmap_json=('[' + json.dumps(mindmap, ensure_ascii=False) + "]").decode('utf-8'),
                      todo_json=json.dumps(todo, ensure_ascii=False).decode('utf-8'))
 
-out_f = open('../out.html', 'w')
+out_f = open('mindmap.html', 'w')
 out_f.write(result.encode('utf-8'))
 
 tmpl_f.close()
