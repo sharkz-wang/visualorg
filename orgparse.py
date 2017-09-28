@@ -13,6 +13,7 @@ from jinja2 import Template
 
 project_subtree_tag = 'Project'
 milestone_tag = 'Milestone'
+archived_tag = 'Archived'
 
 base = OrgDataStructure()
 base.set_todo_states(['TODO', 'STARTED', 'WAITING', 'SCHEDULED',
@@ -25,9 +26,21 @@ is_node = lambda x: isinstance(x, OrgElement) and 'heading' in x.__dict__
 
 def tree2dict(root, get_nodes, project_subtree=False):
 
+    ret_mindmap = dict()
+    ret_todo_list = []
+    ret_gantt = []
+    ret_timeline = {
+        'events': [],
+        'legends': []
+    }
+
     project_subtree = project_subtree or project_subtree_tag in root.tags
     is_project = project_subtree_tag in root.tags
     is_milestone = milestone_tag in root.tags
+    is_archived = archived_tag in root.tags
+
+    if is_archived:
+        return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
 
     # chomp trailing whitespaces
     root.heading = root.heading.rstrip()
@@ -62,14 +75,6 @@ def tree2dict(root, get_nodes, project_subtree=False):
                 node_id = prop.value
             if prop.name == 'DEPENDENCY':
                 dep_id = prop.value
-
-    ret_mindmap = dict()
-    ret_todo_list = []
-    ret_gantt = []
-    ret_timeline = {
-        'events': [],
-        'legends': []
-    }
 
     ret_mindmap['name'] = root.heading
 
@@ -165,7 +170,8 @@ def tree2dict(root, get_nodes, project_subtree=False):
         ret_gantt = ret_gantt + _gantt_list
 
         ret_todo_list = ret_todo_list + _todo_lsit
-        ret_mindmap['children'].append(_mdmp)
+        if _mdmp:
+            ret_mindmap['children'].append(_mdmp)
 
         ret_timeline['events'] = _timeline['events'] + ret_timeline['events']
 
