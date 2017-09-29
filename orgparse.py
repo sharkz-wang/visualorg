@@ -11,9 +11,12 @@ from pprint import pprint
 from Queue import Queue
 from jinja2 import Template
 
+hide_hidden_tasks = True
+
 project_subtree_tag = 'Project'
 milestone_tag = 'Milestone'
 archived_tag = 'Archived'
+hidden_tag = 'Hidden'
 
 base = OrgDataStructure()
 base.set_todo_states(['TODO', 'STARTED', 'WAITING', 'SCHEDULED',
@@ -38,8 +41,9 @@ def tree2dict(root, get_nodes, project_subtree=False):
     is_project = project_subtree_tag in root.tags
     is_milestone = milestone_tag in root.tags
     is_archived = archived_tag in root.tags
+    is_hidden = hidden_tag in root.tags
 
-    if is_archived:
+    if is_archived or (hide_hidden_tasks and is_hidden):
         return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
 
     # chomp trailing whitespaces
