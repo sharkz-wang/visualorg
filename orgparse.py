@@ -18,10 +18,11 @@ milestone_tag = 'Milestone'
 archived_tag = 'Archived'
 hidden_tag = 'Hidden'
 
+todo_keyword_list = [ 'TODO', 'STARTED', 'WAITING', 'SCHEDULED' ]
+done_keyword_list = [ 'DONE', 'ABORTED', 'SUSPENDED' ]
+
 base = OrgDataStructure()
-base.set_todo_states(['TODO', 'STARTED', 'WAITING', 'SCHEDULED',
-                      '|',
-                      'DONE', 'ABORTED', 'SUSPENDED'])
+base.set_todo_states(todo_keyword_list + [ '|' ] + done_keyword_list)
 base.load_from_file('../inbox.org')
 root = base.root
 
