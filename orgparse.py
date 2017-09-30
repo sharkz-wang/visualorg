@@ -12,6 +12,7 @@ from Queue import Queue
 from jinja2 import Template
 
 hide_hidden_tasks = True
+hide_done_tasks = True
 
 project_subtree_tag = 'Project'
 milestone_tag = 'Milestone'
@@ -43,6 +44,7 @@ def tree2dict(root, get_nodes, project_subtree=False, gantt_level=0):
     is_milestone = milestone_tag in root.tags
     is_archived = archived_tag in root.tags
     is_hidden = hidden_tag in root.tags
+    is_done = hasattr(root, 'todo') and root.todo in done_keyword_list
 
     if is_archived or (hide_hidden_tasks and is_hidden):
         return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
@@ -187,6 +189,9 @@ def tree2dict(root, get_nodes, project_subtree=False, gantt_level=0):
 
     if not ret_mindmap['children']:
         del ret_mindmap['children']
+
+    if hide_done_tasks and is_done:
+        ret_mindmap = dict()
 
     return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
 
