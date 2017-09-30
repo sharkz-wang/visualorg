@@ -335,6 +335,56 @@
 
 </style>
 <script>
+
+ var tasks = [
+     { state: 'SCHEDULED', project: 'Health', name: 'jogging', description: 'no description' }
+ ];
+
+ window.onload = function () {
+     sched_list_root = document.getElementById('scheduled_list');
+
+     tasks.forEach(function (task) {
+
+         elem = document.createElement('li');
+         elem.classList.add('list_scheduled');
+         elem.classList.add('li_num_0_1');
+
+         elem.innerHTML =
+             `
+             <div class="col_md_1_list">
+                <p>
+             ` +
+             task['project'] +
+             `
+                </p>
+             </div>
+             <div class="col_md_2_list">
+                <h4>
+             ` +
+             task['name'] +
+             `
+                </h4>
+                <p>
+             ` +
+             task['description'] +
+             `
+                </p>
+             </div>
+             <div class="col_md_3_list">
+                <div class="cont_text_date">
+                    <p>TODAY</p>
+                </div>
+                <div class="cont_btns_options">
+                    <ul>
+                        <li><a href="#" onclick="finish_action('0','0_1');"><i class="material-icons"></i></a></li>
+                    </ul>
+                </div>
+             </div>
+             `;
+         sched_list_root.appendChild(elem);
+     });
+ }
+
  var contador = 0, select_opt = 0;
 
  function add_to_list(){
@@ -418,7 +468,7 @@
     <div class="cont_centrar">
         <div class="cont_todo_list_top">
             <div class="cont_titulo_cont">
-                <h3>TODO</h3>
+                <h3>SCHEDULED</h3>
             </div>
             <div class="cont_add_titulo_cont"><a href="#e" onclick="add_new()"><i class="material-icons"></i></a>
             </div>
@@ -469,26 +519,7 @@
                 <!--   End cont_crear_new  -->
             </div>
             <div class="cont_princ_lists">
-                <ul>
-                    <li class="list_scheduled li_num_0_1">
-                        <div class="col_md_1_list">
-                            <p>SHOPPIGN</p>
-                        </div>
-                        <div class="col_md_2_list">
-                            <h4>BUY COFFEE BEANS</h4>
-                            <p>DODIDONE COFFEE STORE</p>
-                        </div>
-                        <div class="col_md_3_list">
-                            <div class="cont_text_date">
-                                <p>TODAY</p>
-                            </div>
-                            <div class="cont_btns_options">
-                                <ul>
-                                    <li><a href="#" onclick="finish_action('0','0_1');"><i class="material-icons"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
+                <ul id='scheduled_list'>
                     <!-- <li class="list_todo"></li>
                          <li class="list_scheduled"></li>
                        -->  </ul>
