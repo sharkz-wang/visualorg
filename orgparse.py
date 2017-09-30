@@ -82,24 +82,32 @@ def tree2dict(root, get_nodes, project_subtree=False):
 
     ret_mindmap['name'] = root.heading
 
-    if project_subtree and (start_ts_ms or end_ts_ms):
+    if project_subtree_tag in root.tags or\
+       (project_subtree and (start_ts_ms or end_ts_ms)):
 
         start_is_milestone = False
         end_is_milestone = False
-        if not start_ts_ms and end_ts_ms:
-            start_ts_ms = end_ts_ms
-            end_is_milestone = True
-        if start_ts_ms and not end_ts_ms:
-            end_ts_ms = start_ts_ms
-            start_is_milestone = True
+        duration = None
 
-        ms_per_day = 24*60*60*1000
-        duration_date_ts_list = range(start_ts_ms, end_ts_ms + ms_per_day, ms_per_day)
-        duration_date_list = map(lambda x: datetime.fromtimestamp(x/1000), duration_date_ts_list)
-        duration_weekday_list = map(lambda x: x.weekday(), duration_date_list)
+        if project_subtree_tag in root.tags:
+            # TODO: use magic date for dummy gantt items, fix this ugly hack
+            start_ts_ms = 1893455999000
+            end_ts_ms = 1893455999000
+        else:
+            if not start_ts_ms and end_ts_ms:
+                start_ts_ms = end_ts_ms
+                end_is_milestone = True
+            if start_ts_ms and not end_ts_ms:
+                end_ts_ms = start_ts_ms
+                start_is_milestone = True
 
-        # twproject gantt ignores weekends when counting duration
-        duration = len(filter(lambda x: x < 5, duration_weekday_list))
+            ms_per_day = 24*60*60*1000
+            duration_date_ts_list = range(start_ts_ms, end_ts_ms + ms_per_day, ms_per_day)
+            duration_date_list = map(lambda x: datetime.fromtimestamp(x/1000), duration_date_ts_list)
+            duration_weekday_list = map(lambda x: x.weekday(), duration_date_list)
+
+            # twproject gantt ignores weekends when counting duration
+            duration = len(filter(lambda x: x < 5, duration_weekday_list))
 
         ret_gantt.append({
             "id": node_id,
