@@ -27,7 +27,7 @@ root = base.root
 
 is_node = lambda x: isinstance(x, OrgElement) and 'heading' in x.__dict__
 
-def tree2dict(root, get_nodes, project_subtree=False):
+def tree2dict(root, get_nodes, project_subtree=False, gantt_level=0):
 
     ret_mindmap = dict()
     ret_todo_list = []
@@ -119,7 +119,7 @@ def tree2dict(root, get_nodes, project_subtree=False):
             "typeId": "",
             "description": "",
             "code": "",
-            "level": 0,
+            "level": gantt_level,
             "status": "STATUS_ACTIVE",
             "depends": dep_id if dep_id else "",
             "canWrite": True,
@@ -132,6 +132,8 @@ def tree2dict(root, get_nodes, project_subtree=False):
             "assigs": [],
             "hasChild": True
             })
+
+        gantt_level += 1
 
         if is_project or is_milestone:
             ret_timeline['events'].append({
@@ -172,13 +174,8 @@ def tree2dict(root, get_nodes, project_subtree=False):
     for node in get_nodes(root):
         (_mdmp, _todo_lsit, _gantt_list, _timeline) = tree2dict(node,
                                                                 get_nodes,
-                                                                project_subtree)
-        if project_subtree:
-            for it in enumerate(_gantt_list):
-                idx = it[0]
-                item = it[1]
-
-                item['level'] += 1
+                                                                project_subtree,
+                                                                gantt_level)
         ret_gantt = ret_gantt + _gantt_list
 
         ret_todo_list = ret_todo_list + _todo_lsit
