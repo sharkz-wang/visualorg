@@ -317,6 +317,11 @@
      color: #e45;
  }
 
+ .list_wait > .col_md_1_list {
+     border-left: 4px solid #e45;
+     color: #e45;
+ }
+
  .list_todo > .col_md_1_list {
      border-left: 4px solid #2A476B;
      color: #2A476B;
@@ -337,16 +342,42 @@
 <script>
 
  var tasks = [
-     { state: 'SCHEDULED', project: 'Health', name: 'jogging', description: 'no description' }
+     { state: 'SCHEDULED', project: 'Health', name: 'jogging', description: 'no description' },
+     { state: 'WAITING', project: 'Work', name: 'data report', description: 'no description' },
+     { state: 'STARTED', project: 'Hobby', name: 'reading', description: 'no description' },
+     { state: 'TODO', project: 'Life', name: 'travel', description: 'no description' },
+     { state: 'DONE', project: 'Life', name: 'do nothing', description: 'no description' }
  ];
 
  window.onload = function () {
-     sched_list_root = document.getElementById('scheduled_list');
 
      tasks.forEach(function (task) {
 
+         switch (task['state']) {
+             case "SCHEDULED":
+                 list_id = 'scheduled_list'
+                 li_class_name = 'list_scheduled'
+                 break;
+             case "STARTED":
+                 list_id = 'started_list'
+                 li_class_name = 'list_started'
+                 break;
+             case "WAITING":
+                 list_id = 'wait_list'
+                 li_class_name = 'list_wait'
+                 break;
+             case "TODO":
+                 list_id = 'todo_list'
+                 li_class_name = 'list_todo'
+                 break;
+             default:
+                 return;
+         }
+
+         list_root = document.getElementById(list_id);
+
          elem = document.createElement('li');
-         elem.classList.add('list_scheduled');
+         elem.classList.add(li_class_name);
          elem.classList.add('li_num_0_1');
 
          elem.innerHTML =
@@ -381,7 +412,7 @@
                 </div>
              </div>
              `;
-         sched_list_root.appendChild(elem);
+         list_root.appendChild(elem);
      });
  }
 
@@ -520,6 +551,189 @@
             </div>
             <div class="cont_princ_lists">
                 <ul id='scheduled_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->  </ul>
+                <!--   End cont_todo_list_top  -->   </div>
+            <!--   End cont_central  -->
+    </div>
+    <div class="cont_centrar">
+        <div class="cont_todo_list_top">
+            <div class="cont_titulo_cont">
+                <h3>WAITING</h3>
+            </div>
+            <div class="cont_add_titulo_cont"><a href="#e" onclick="add_new()"><i class="material-icons"></i></a>
+            </div>
+
+            <!--   End cont_todo_list_top  -->  </div>
+            <div class="cont_crear_new">
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td><select name="" id="action_select">
+                            <option value="STARTED">STARTED</option>
+                            <option value="TODO">TODO</option> <option value="SCHEDULED">SCHEDULED</option>
+                        </select>
+                        <!-- End td 1 -->
+                        </td>
+                        <td>
+                            <input type="text" class="input_title_desc" />
+
+                            <!-- End td 2 -->
+                        </td>
+                        <td>
+                            <select name="" class="input_description_title"  id="date_select">
+                                <option value="TODAY">TODAY</option>
+                                <option value="TOMORROW">TOMORROW</option>
+                            </select>
+                            <!-- End td 3 -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="titl_description" >Description</th>
+                    </tr>
+                    <tr>
+
+                        <td colspan="3">
+                            <input type="text" class="input_description" required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn_add_fin"  onclick="add_to_list()">ADD</button>
+                        </td>
+                    </tr>
+                </table>
+                <!--   End cont_crear_new  -->
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='wait_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->  </ul>
+                <!--   End cont_todo_list_top  -->   </div>
+            <!--   End cont_central  -->
+    </div>
+    <div class="cont_centrar">
+        <div class="cont_todo_list_top">
+            <div class="cont_titulo_cont">
+                <h3>STARTED</h3>
+            </div>
+            <div class="cont_add_titulo_cont"><a href="#e" onclick="add_new()"><i class="material-icons"></i></a>
+            </div>
+
+            <!--   End cont_todo_list_top  -->  </div>
+            <div class="cont_crear_new">
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td><select name="" id="action_select">
+                            <option value="STARTED">STARTED</option>
+                            <option value="TODO">TODO</option> <option value="SCHEDULED">SCHEDULED</option>
+                        </select>
+                        <!-- End td 1 -->
+                        </td>
+                        <td>
+                            <input type="text" class="input_title_desc" />
+
+                            <!-- End td 2 -->
+                        </td>
+                        <td>
+                            <select name="" class="input_description_title"  id="date_select">
+                                <option value="TODAY">TODAY</option>
+                                <option value="TOMORROW">TOMORROW</option>
+                            </select>
+                            <!-- End td 3 -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="titl_description" >Description</th>
+                    </tr>
+                    <tr>
+
+                        <td colspan="3">
+                            <input type="text" class="input_description" required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn_add_fin"  onclick="add_to_list()">ADD</button>
+                        </td>
+                    </tr>
+                </table>
+                <!--   End cont_crear_new  -->
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='started_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->  </ul>
+                <!--   End cont_todo_list_top  -->   </div>
+            <!--   End cont_central  -->
+    </div>
+    <div class="cont_centrar">
+        <div class="cont_todo_list_top">
+            <div class="cont_titulo_cont">
+                <h3>TODO</h3>
+            </div>
+            <div class="cont_add_titulo_cont"><a href="#e" onclick="add_new()"><i class="material-icons"></i></a>
+            </div>
+
+            <!--   End cont_todo_list_top  -->  </div>
+            <div class="cont_crear_new">
+                <table class="table">
+                    <tr>
+                        <th>Action</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr>
+                        <td><select name="" id="action_select">
+                            <option value="STARTED">STARTED</option>
+                            <option value="TODO">TODO</option> <option value="SCHEDULED">SCHEDULED</option>
+                        </select>
+                        <!-- End td 1 -->
+                        </td>
+                        <td>
+                            <input type="text" class="input_title_desc" />
+
+                            <!-- End td 2 -->
+                        </td>
+                        <td>
+                            <select name="" class="input_description_title"  id="date_select">
+                                <option value="TODAY">TODAY</option>
+                                <option value="TOMORROW">TOMORROW</option>
+                            </select>
+                            <!-- End td 3 -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="titl_description" >Description</th>
+                    </tr>
+                    <tr>
+
+                        <td colspan="3">
+                            <input type="text" class="input_description" required />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <button class="btn_add_fin"  onclick="add_to_list()">ADD</button>
+                        </td>
+                    </tr>
+                </table>
+                <!--   End cont_crear_new  -->
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='todo_list'>
                     <!-- <li class="list_todo"></li>
                          <li class="list_scheduled"></li>
                        -->  </ul>
