@@ -160,13 +160,12 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
 
 
     if hasattr(root, 'todo'):
-        if root.todo == 'SCHEDULED':
-            ret_todo = dict()
-            ret_todo['status'] = root.todo
-            ret_todo['name'] = root.heading
-            ret_todo['project'] = project
-            ret_todo['description'] = 'no description'
-            ret_todo_list.append(ret_todo)
+        ret_todo = dict()
+        ret_todo['state'] = root.todo
+        ret_todo['name'] = root.heading
+        ret_todo['project'] = project
+        ret_todo['description'] = 'no description'
+        ret_todo_list.append(ret_todo)
 
         ret_mindmap['todo'] = root.todo
         ret_mindmap['name'] = "[" + root.todo.lower() + "] " + ret_mindmap['name']
