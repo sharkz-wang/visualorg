@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <style>
      .node {
@@ -36,9 +37,9 @@
 
 
        // ************** Generate the tree diagram  *****************
-       var margin = {top: 20, right: 120, bottom: 20, left: 120},
-           width = 5400 - margin.right - margin.left,
-           height = 1700 - margin.top - margin.bottom;
+       var margin = {top: 20, right: 20, bottom: 20, left: 60},
+           width = 5000 - margin.right - margin.left,
+           height = $(document).height() - margin.top - margin.bottom;
 
        var i = 0,
            duration = 750,
