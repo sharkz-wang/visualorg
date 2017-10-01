@@ -29,7 +29,7 @@ root = base.root
 
 is_node = lambda x: isinstance(x, OrgElement) and 'heading' in x.__dict__
 
-def tree2dict(root, get_nodes, project_subtree=False, gantt_level=0):
+def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=0):
 
     ret_mindmap = dict()
     ret_todo_list = []
@@ -160,11 +160,12 @@ def tree2dict(root, get_nodes, project_subtree=False, gantt_level=0):
 
 
     if hasattr(root, 'todo'):
-        if root.todo == 'SCHEDULED':
-            ret_todo = dict()
-            ret_todo['status'] = root.todo
-            ret_todo['heading'] = root.heading
-            ret_todo_list.append(ret_todo)
+        ret_todo = dict()
+        ret_todo['state'] = root.todo
+        ret_todo['name'] = root.heading
+        ret_todo['project'] = project
+        ret_todo['description'] = 'no description'
+        ret_todo_list.append(ret_todo)
 
         ret_mindmap['todo'] = root.todo
         ret_mindmap['name'] = "[" + root.todo.lower() + "] " + ret_mindmap['name']
@@ -178,6 +179,7 @@ def tree2dict(root, get_nodes, project_subtree=False, gantt_level=0):
         (_mdmp, _todo_lsit, _gantt_list, _timeline) = tree2dict(node,
                                                                 get_nodes,
                                                                 project_subtree,
+                                                                root.heading if is_project else "None",
                                                                 gantt_level)
         ret_gantt = ret_gantt + _gantt_list
 
@@ -245,6 +247,18 @@ tmpl = Template(tmpl_txt.decode('utf-8'))
 result = tmpl.render(timeline_events=json.dumps(timeline['events'], ensure_ascii=False).decode('utf-8'))
 
 out_f = open('./timeglider/full_window.html', 'w')
+out_f.write(result.encode('utf-8'))
+
+tmpl_f.close()
+out_f.close()
+
+tmpl_f = open('./kanban/index_tmpl.html')
+tmpl_txt = tmpl_f.read()
+
+tmpl = Template(tmpl_txt.decode('utf-8'))
+result = tmpl.render(task_list=json.dumps(todo, ensure_ascii=False).decode('utf-8'))
+
+out_f = open('./kanban/index.html', 'w')
 out_f.write(result.encode('utf-8'))
 
 tmpl_f.close()
