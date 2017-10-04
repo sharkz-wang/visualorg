@@ -108,7 +108,7 @@ Date.dayAbbreviations = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 // Set to false to prefer 'European' format meaning Feb 1
 Date.preferAmericanFormat = false;
 
-Date.firstDayOfWeek =0;
+Date.firstDayOfWeek =1;
 Date.defaultFormat = "M/d/yyyy";
 Date.masks = {
   fullDate:       "EEEE, MMMM d, yyyy",
