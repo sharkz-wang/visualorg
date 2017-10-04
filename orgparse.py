@@ -122,7 +122,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
             "canWrite": True,
             "start": (start_ts_ms if start_ts_ms else ""),
             "end": (end_ts_ms if end_ts_ms else ""),
-            "duration": (duration if duration else 1),
+            "duration": (duration if duration else "--"),
             "startIsMilestone": start_is_milestone,
             "endIsMilestone": end_is_milestone,
             "collapsed": False,
