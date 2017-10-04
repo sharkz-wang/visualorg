@@ -30,7 +30,7 @@ Date.preferAmericanFormat = true;
 Date.firstDayOfWeek = 1;
 
 //default 
-Date.defaultFormat="dd/MM/yyyy";
+Date.defaultFormat="yyyy/dd/MM";
 
 // If the getFullYear() method is not defined, create it
 if (!Date.prototype.getFullYear) { 
