@@ -93,9 +93,8 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         duration = None
 
         if project_subtree_tag in root.tags:
-            # TODO: use magic date for dummy gantt items, fix this ugly hack
-            start_ts_ms = 1893455999000
-            end_ts_ms = 1893455999000
+            start_ts_ms = None
+            end_ts_ms = None
         else:
             if not start_ts_ms and end_ts_ms:
                 start_ts_ms = end_ts_ms
@@ -123,7 +122,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
             "canWrite": True,
             "start": (start_ts_ms if start_ts_ms else ""),
             "end": (end_ts_ms if end_ts_ms else ""),
-            "duration": (duration if duration else 1),
+            "duration": (duration if duration else "--"),
             "startIsMilestone": start_is_milestone,
             "endIsMilestone": end_is_milestone,
             "collapsed": False,
@@ -133,7 +132,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
 
         gantt_level += 1
 
-        if is_project or is_milestone:
+        if (is_project or is_milestone) and (start_ts_ms or end_ts_ms):
             ret_timeline['events'].append({
                 "id": node_id,
                 "title": root.heading if not is_project else root.heading + ' done',
