@@ -689,6 +689,10 @@ Ganttalendar.prototype.drawTask = function (task) {
 
 
   function _createTaskSVG(task, dimensions) {
+
+    if (isNaN(task.start) && isNaN(task.end))
+        return;
+
     var svg = self.svg;
     var taskSvg = svg.svg(self.tasksGroup, dimensions.x, dimensions.y, dimensions.width, dimensions.height, {class:"taskBox taskBoxSVG taskStatusSVG", status:task.status, taskid:task.id,fill:task.color||"#eee" });
 
