@@ -13,11 +13,13 @@ from jinja2 import Template
 
 hide_hidden_tasks = True
 hide_done_tasks = True
+enable_default_folding = True
 
 project_subtree_tag = 'Project'
 milestone_tag = 'Milestone'
 archived_tag = 'Archived'
 hidden_tag = 'Hidden'
+folded_subtree_tag = 'Folded'
 
 todo_keyword_list = [ 'TODO', 'STARTED', 'WAITING', 'SCHEDULED' ]
 done_keyword_list = [ 'DONE', 'ABORTED', 'SUSPENDED' ]
@@ -44,6 +46,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     is_milestone = milestone_tag in root.tags
     is_archived = archived_tag in root.tags
     is_hidden = hidden_tag in root.tags
+    is_folded = folded_subtree_tag in root.tags
     is_done = hasattr(root, 'todo') and root.todo in done_keyword_list
 
     if is_archived or (hide_hidden_tasks and is_hidden):
@@ -168,6 +171,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     #     return ret_mindmap
 
     ret_mindmap['children'] = []
+    ret_mindmap['_children'] = []
 
     for node in get_nodes(root):
         (_mdmp, _todo_lsit, _gantt_list, _timeline) = tree2dict(node,
@@ -179,12 +183,18 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
 
         ret_todo_list = ret_todo_list + _todo_lsit
         if _mdmp:
-            ret_mindmap['children'].append(_mdmp)
+            if is_folded and enable_default_folding:
+                ret_mindmap['_children'].append(_mdmp)
+            else:
+                ret_mindmap['children'].append(_mdmp)
 
         ret_timeline['events'] = _timeline['events'] + ret_timeline['events']
 
     if not ret_mindmap['children']:
         del ret_mindmap['children']
+
+    if not ret_mindmap['_children']:
+        del ret_mindmap['_children']
 
     if hide_done_tasks and is_done:
         ret_mindmap = dict()
