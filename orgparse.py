@@ -105,12 +105,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
                 start_is_milestone = True
 
             ms_per_day = 24*60*60*1000
-            duration_date_ts_list = range(start_ts_ms, end_ts_ms + ms_per_day, ms_per_day)
-            duration_date_list = map(lambda x: datetime.fromtimestamp(x/1000), duration_date_ts_list)
-            duration_weekday_list = map(lambda x: x.weekday(), duration_date_list)
-
-            # twproject gantt ignores weekends when counting duration
-            duration = len(filter(lambda x: x < 5, duration_weekday_list))
+            duration = len(range(start_ts_ms, end_ts_ms + ms_per_day, ms_per_day))
 
         ret_gantt.append({
             "id": node_id,
