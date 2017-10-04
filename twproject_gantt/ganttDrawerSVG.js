@@ -324,7 +324,7 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         end.setDate(end.getDate() + 1);
         var periodWidth=(end.getTime()-date.getTime())*computedScaleX;
 
-        tr2.append(createHeadCell(date.format("EEEE").substr(0, 1), 1, isHoliday(date) ? "holyH" : null, periodWidth));
+        tr2.append(createHeadCell(date.format("d").substr(0, 2), 1, isHoliday(date) ? "holyH" : null, periodWidth));
         trBody.append(createBodyCell(1, date.getDay() % 7 == (self.master.firstDayOfWeek + 6) % 7, isHoliday(date) ? "holy" : null));
         date.setDate(date.getDate() + 1);
       });
@@ -341,7 +341,7 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         end.setDate(end.getDate() + 1);
         var periodWidth=(end.getTime()-date.getTime())*computedScaleX;
 
-        tr2.append(createHeadCell(date.format("EEEE").substr(0, 1), 1, isHoliday(date) ? "holyH" : null, periodWidth));
+        tr2.append(createHeadCell(date.format("d").substr(0, 2), 1, isHoliday(date) ? "holyH" : null, periodWidth));
         trBody.append(createBodyCell(1, date.getDay() % 7 == (self.master.firstDayOfWeek + 6) % 7, isHoliday(date) ? "holy" : null));
         date.setDate(date.getDate() + 1);
       });
@@ -375,7 +375,7 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         end.setDate(end.getDate() + 1);
         var periodWidth=(end.getTime()-date.getTime())*computedScaleX;
 
-        tr2.append(createHeadCell(date.format("EEE d"), 1, isHoliday(date) ? "holyH" : null, periodWidth));
+        tr2.append(createHeadCell(date.format("d"), 1, isHoliday(date) ? "holyH" : null, periodWidth));
         trBody.append(createBodyCell(1, date.getDay() % 7 == (self.master.firstDayOfWeek + 6) % 7, isHoliday(date) ? "holy" : null));
         date.setDate(date.getDate() + 1);
       });
