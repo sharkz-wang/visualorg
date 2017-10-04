@@ -13,6 +13,7 @@ from jinja2 import Template
 
 hide_hidden_tasks = True
 hide_done_tasks = True
+enable_default_folding = True
 
 project_subtree_tag = 'Project'
 milestone_tag = 'Milestone'
@@ -182,7 +183,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
 
         ret_todo_list = ret_todo_list + _todo_lsit
         if _mdmp:
-            if is_folded:
+            if is_folded and enable_default_folding:
                 ret_mindmap['_children'].append(_mdmp)
             else:
                 ret_mindmap['children'].append(_mdmp)
