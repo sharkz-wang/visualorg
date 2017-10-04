@@ -266,7 +266,7 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 7);
         var periodWidth=(end.getTime()-date.getTime())*computedScaleX;
-        var lbl ="<small>"+i18n["WEEK_SHORT"].toLowerCase()+"</small> "+ date.format("w");
+        var lbl = "W" + date.format("yyww");
         tr2.append(createHeadCell(lbl, 7, null, periodWidth));
         trBody.append(createBodyCell(7,false));
         date.setDate(date.getDate() + 7);
@@ -279,7 +279,14 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         var sm = date.getTime();
         date.setMonth(date.getMonth() + 1);
         var daysInMonth = Math.round((date.getTime() - sm) / (3600000 * 24));
-        tr1.append(createHeadCell(new Date(sm).format("yyyy/MMM"), daysInMonth)); //spans mumber of dayn in the month
+
+        /* month end date = date (first day of next month) - 1 */
+        var end_date = new Date(date.getTime());
+        end_date.setDate(end_date.getDate() - 1);
+
+        var lbl = "W" + (new Date(sm)).format("yyww");
+        var end_lbl = "W" + end_date.format("yyww");
+        tr1.append(createHeadCell("[" + lbl + "] - [" + end_lbl + "]  " + (new Date(sm).format("yyyy/MMM")), daysInMonth)); //spans mumber of dayn in the month
       }, function (date) {
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 1);
@@ -298,7 +305,14 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         var sm = date.getTime();
         date.setMonth(date.getMonth() + 1);
         var daysInMonth = Math.round((date.getTime() - sm) / (3600000 * 24));
-        tr1.append(createHeadCell(new Date(sm).format("yyyy/MMM"), daysInMonth)); //spans mumber of dayn in the month
+
+        /* month end date = date (first day of next month) - 1 */
+        var end_date = new Date(date.getTime());
+        end_date.setDate(end_date.getDate() - 1);
+
+        var lbl = "W" + (new Date(sm)).format("yyww");
+        var end_lbl = "W" + end_date.format("yyww");
+        tr1.append(createHeadCell("[" + lbl + "] - [" + end_lbl + "]  " + (new Date(sm).format("yyyy/MMM")), daysInMonth)); //spans mumber of dayn in the month
       }, function (date) {
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 1);
@@ -317,7 +331,8 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
       iterate(function (date) {
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
-        tr1.append(createHeadCell(date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        var lbl = "W" + date.format("yyww");
+        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
@@ -334,7 +349,8 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
       iterate(function (date) {
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
-        tr1.append(createHeadCell(date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        var lbl = "W" + date.format("yyww");
+        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
@@ -351,7 +367,8 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
       iterate(function (date) {
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
-        tr1.append(createHeadCell(date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        var lbl = "W" + date.format("yyww");
+        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
@@ -368,7 +385,8 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
       iterate(function (date) {
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
-        tr1.append(createHeadCell(date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        var lbl = "W" + date.format("yyww");
+        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
