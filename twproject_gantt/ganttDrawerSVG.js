@@ -332,7 +332,11 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
         var lbl = "W" + date.format("yyww");
-        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        if (date.getMonth() == end.getMonth()) {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM"), 7));
+        } else {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        }
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
@@ -350,7 +354,11 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
         var lbl = "W" + date.format("yyww");
-        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        if (date.getMonth() == end.getMonth()) {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM"), 7));
+        } else {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        }
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
@@ -368,7 +376,11 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
         var lbl = "W" + date.format("yyww");
-        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        if (date.getMonth() == end.getMonth()) {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM"), 7));
+        } else {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        }
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
@@ -386,7 +398,11 @@ Ganttalendar.prototype.create = function (zoom, originalStartmillis, originalEnd
         var end = new Date(date.getTime());
         end.setDate(end.getDate() + 6);
         var lbl = "W" + date.format("yyww");
-        tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        if (date.getMonth() == end.getMonth()) {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM"), 7));
+        } else {
+            tr1.append(createHeadCell("[" + lbl + "]  " + date.format("yyyy/MMM") + " - " + end.format("yyyy/MMM"), 7));
+        }
         date.setDate(date.getDate() + 7);
       }, function (date) {
         var end = new Date(date.getTime());
