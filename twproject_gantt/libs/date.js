@@ -27,7 +27,7 @@ Date.dayAbbreviations = new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat');
 Date.preferAmericanFormat = true;
 
 // Set to 0=SUn for American 1=Mon for european
-Date.firstDayOfWeek = 0;
+Date.firstDayOfWeek = 1;
 
 //default 
 Date.defaultFormat="dd/MM/yyyy";
