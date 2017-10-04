@@ -99,7 +99,7 @@ function dateToRelative(localTime){
 
 Date.monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 // Month abbreviations. Change this for local month names
-Date.monthAbbreviations = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+Date.monthAbbreviations = ["1","2","3","4","5","6","7","8","9","10","11","12"];
 // Full day names. Change this for local month names
 Date.dayNames =["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 // Day abbreviations. Change this for local month names
