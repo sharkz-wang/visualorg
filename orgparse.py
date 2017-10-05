@@ -67,7 +67,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     property_nodes = []
     root_properties = []
     node_id = None
-    dep_id = None
+    dep_id = []
 
     # get first property node
     if hasattr(root, 'content'):
@@ -84,7 +84,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
             if prop.name == 'CUSTOM_ID':
                 node_id = prop.value
             if prop.name == 'DEPENDENCY':
-                dep_id = prop.value
+                dep_id.append(prop.value)
 
     ret_mindmap['name'] = root.heading
 
@@ -121,7 +121,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
             "code": "",
             "level": gantt_level,
             "status": "STATUS_ACTIVE",
-            "depends": dep_id if dep_id else "",
+            "depends": dep_id,
             "canWrite": True,
             "start": (start_ts_ms if start_ts_ms else ""),
             "end": (end_ts_ms if end_ts_ms else ""),
@@ -217,7 +217,11 @@ for en in enumerate(gantt):
     gantt_item = en[1]
     gantt_item['id'] = idx
     if gantt_item['depends']:
-        gantt_item['depends'] = "%d" % -custom_gantt_id_map_tb[gantt_item['depends']]
+        dep_list = map(lambda x: -custom_gantt_id_map_tb[x], gantt_item['depends'])
+        dep_str_list = map(lambda x: "%d" % x, dep_list)
+        gantt_item['depends'] = ",".join(dep_str_list)
+    else:
+        gantt_item['depends'] = None
 
 tmpl_f = open('test_bootstrap.html')
 tmpl_txt = tmpl_f.read()
