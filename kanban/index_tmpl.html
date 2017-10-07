@@ -7,7 +7,7 @@
  .cont_principal {
      position: absolute;
      /* XXX: hard-coded */
-     width: 2080px;
+     width: 3000px;
      height: 100%;
      overflow: auto;
      background: rgb(250,249,247);
@@ -203,6 +203,11 @@
      color: #EF8A18;
  }
 
+ .list_done > .col_md_1_list {
+     border-left: 4px solid #a9a9a9;
+     color: #a9a9a9;
+ }
+
 </style>
 <script>
 
@@ -228,6 +233,10 @@
              case "TODO":
                  list_id = 'todo_list'
                  li_class_name = 'list_todo'
+                 break;
+             case "DONE":
+                 list_id = 'done_list'
+                 li_class_name = 'list_done'
                  break;
              default:
                  return;
@@ -313,6 +322,18 @@
             </div>
             <div class="cont_princ_lists">
                 <ul id='started_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->
+                </ul>
+            </div>
+        </il>
+        <il>
+            <div class="cont_titulo_cont">
+                <h3>DONE</h3>
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='done_list'>
                     <!-- <li class="list_todo"></li>
                          <li class="list_scheduled"></li>
                        -->
