@@ -165,6 +165,10 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         ret_todo['name'] = root.heading
         ret_todo['project'] = project
         ret_todo['description'] = 'no description'
+        if ret_todo['state'] == 'DONE':
+            if len(root.content) > 0 and\
+               hasattr(root.content[0], 'closed'):
+                ret_todo['date_ts'] = int(time.mktime(root.content[0].closed.value) * 1000)
         ret_todo_list.append(ret_todo)
 
         ret_mindmap['todo'] = root.todo
@@ -265,6 +269,14 @@ out_f.close()
 
 tmpl_f = open('./kanban/index_tmpl.html')
 tmpl_txt = tmpl_f.read()
+
+has_done_date = lambda task: task['state'] == 'DONE' and 'date_ts' in task
+done_tasks = filter(has_done_date, todo)
+other_tasks = filter(lambda task: not has_done_date(task), todo)
+
+done_tasks_sorted_desc = sorted(done_tasks, key=lambda task: task['date_ts'], reverse=True)
+
+todo = done_tasks_sorted_desc + other_tasks
 
 tmpl = Template(tmpl_txt.decode('utf-8'))
 result = tmpl.render(task_list=json.dumps(todo, ensure_ascii=False).decode('utf-8'))
