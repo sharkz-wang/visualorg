@@ -6,7 +6,8 @@
  }
  .cont_principal {
      position: absolute;
-     width: 100%;
+     /* XXX: hard-coded */
+     width: 3000px;
      height: 100%;
      overflow: auto;
      background: rgb(250,249,247);
@@ -16,21 +17,17 @@
      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f7', endColorstr='#dddad1',GradientType=1 );
  }
 
- .cont_centrar {
-     position: relative;
+ .kanban_column {
+     margin: 100px;
+ }
+
+ .kanban_column il {
+     margin: 10px;
      width: 500px;
- }
-
- .cont_todo_list_top {
-     position: relative;
      float: left;
-     width: 100%;
-     height: 60px;
-     margin-top: 20px;
-     box-shadow: 1px 15px 25px -5px rgba(0,0,0,0.3);
  }
 
- .cont_titulo_cont > h3 {
+ .cont_titulo_cont_w_count > h3 {
      text-spacign:2px;
      text-align: left;
      margin-left: 25px;
@@ -41,7 +38,31 @@
      margin-top: 23px;
  }
 
- .cont_titulo_cont {
+ .cont_titulo_cont_w_count {
+     position: relative;
+     float: left;
+     width: 430px;
+     height: 60px;
+     background: rgb(42,72,107);
+     background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
+     background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
+     font-family: 'Open Sans', sans-serif;
+ }
+
+ .cont_titulo_cont_wo_count > h3 {
+     text-spacign:2px;
+     text-align: left;
+     margin-left: 25px;
+     letter-spacing:7px;
+     font-size: 12px;
+     color: #fff;
+     font-weight: 400;
+     margin-top: 23px;
+ }
+
+ .cont_titulo_cont_wo_count {
      position: relative;
      float: left;
      width: 500px;
@@ -52,6 +73,26 @@
      background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
      font-family: 'Open Sans', sans-serif;
+ }
+
+ .cont_add_titulo_cont {
+     position: relative;
+     float: left;
+     width: 70px;
+     height: 60px;
+     background: rgb(42,72,107);
+     background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
+     background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
+
+ }
+
+ .cont_add_titulo_cont > i {
+     display: block;
+     color: #fff;
+     font-size: 32px;
+     margin-top: 9px;
  }
 
  body {
@@ -134,7 +175,7 @@
  .col_md_3_list > .cont_text_date {
      text-align: right;
      font-family: 'Open Sans', sans-serif;
-     font-size: 14px;
+     font-size: 13px;
      font-weight: 700;
  }
 
@@ -195,8 +236,18 @@
      color: #e45;
  }
 
+ .list_started span {
+     font-weight: bold;
+     color: #e45;
+ }
+
  .list_wait > .col_md_1_list {
      border-left: 4px solid #e45;
+     color: #e45;
+ }
+
+ .list_wait span {
+     font-weight: bold;
      color: #e45;
  }
 
@@ -205,9 +256,29 @@
      color: #2A476B;
  }
 
+ .list_todo span {
+     font-weight: bold;
+     color: #2A476B;
+ }
+
  .list_scheduled > .col_md_1_list {
      border-left: 4px solid #EF8A18;
      color: #EF8A18;
+ }
+
+ .list_scheduled span {
+     font-weight: bold;
+     color: #EF8A18;
+ }
+
+ .list_done > .col_md_1_list {
+     border-left: 4px solid #a9a9a9;
+     color: #a9a9a9;
+ }
+
+ .list_done span {
+     font-weight: bold;
+     color: #a9a9a9;
  }
 
 </style>
@@ -217,24 +288,41 @@
 
  window.onload = function () {
 
+     scheduled_count = 0;
+     started_count = 0;
+     wait_count = 0;
+
      tasks.forEach(function (task) {
 
          switch (task['state']) {
              case "SCHEDULED":
                  list_id = 'scheduled_list'
                  li_class_name = 'list_scheduled'
+                 done_date = 'TODAY'
+                 scheduled_count ++;
                  break;
              case "STARTED":
                  list_id = 'started_list'
                  li_class_name = 'list_started'
+                 done_date = task['date_str']
+                 started_count ++;
                  break;
              case "WAITING":
                  list_id = 'wait_list'
                  li_class_name = 'list_wait'
+                 done_date = task['date_str']
+                 wait_count ++;
                  break;
              case "TODO":
                  list_id = 'todo_list'
                  li_class_name = 'list_todo'
+                 /* no need to show time info in backlog*/
+                 done_date = ''
+                 break;
+             case "DONE":
+                 list_id = 'done_list'
+                 li_class_name = 'list_done'
+                 done_date = task['date_str']
                  break;
              default:
                  return;
@@ -250,14 +338,14 @@
              <div class="col_md_1_list">
                 <p>
              ` +
-             task['project'] +
+             task['task_type'] +
              `
                 </p>
              </div>
              <div class="col_md_2_list">
                 <h4>
              ` +
-             task['name'] +
+             (task['milestone'] ? ('<span>' + task['milestone'] + "/</span>") : "" ) + task['name'] +
              `
                 </h4>
                 <p>
@@ -268,81 +356,95 @@
              </div>
              <div class="col_md_3_list">
                 <div class="cont_text_date">
-                    <p>TODAY</p>
+                    <p>
+              ` +
+              done_date +
+              `
+                    </p>
                 </div>
              </div>
              `;
          list_root.appendChild(elem);
      });
+
+     scheduled_count_elem = document.getElementById("scheduled_task_count");
+     scheduled_count_elem.innerText = scheduled_count;
+     started_count_elem = document.getElementById("started_task_count");
+     started_count_elem.innerText = started_count;
+     wait_count_elem = document.getElementById("wait_task_count");
+     wait_count_elem.innerText = wait_count;
  }
 </script>
 <div class="cont_principal">
-    <div class="cont_centrar">
-        <div class="cont_todo_list_top">
-            <div class="cont_titulo_cont">
-                <h3>SCHEDULED</h3>
+    <ul class="kanban_column" >
+        <il>
+            <div class="cont_titulo_cont_w_count">
+                <h3>PENDING</h3>
             </div>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <div class="cont_princ_lists">
-            <ul id='scheduled_list'>
-                <!-- <li class="list_todo"></li>
-                     <li class="list_scheduled"></li>
-                   -->
-            </ul>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <!--   End cont_central  -->
-    </div>
-    <div class="cont_centrar">
-        <div class="cont_todo_list_top">
-            <div class="cont_titulo_cont">
-                <h3>WAITING</h3>
+            <div class="cont_add_titulo_cont">
+                <i id="wait_task_count" class="material-icons"></i>
             </div>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <div class="cont_princ_lists">
-            <ul id='wait_list'>
-                <!-- <li class="list_todo"></li>
-                     <li class="list_scheduled"></li>
-                   -->
-            </ul>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <!--   End cont_central  -->
-    </div>
-    <div class="cont_centrar">
-        <div class="cont_todo_list_top">
-            <div class="cont_titulo_cont">
-                <h3>STARTED</h3>
+            <div class="cont_princ_lists">
+                <ul id='wait_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->
+                </ul>
             </div>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <div class="cont_princ_lists">
-            <ul id='started_list'>
-                <!-- <li class="list_todo"></li>
-                     <li class="list_scheduled"></li>
-                   -->
-            </ul>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <!--   End cont_central  -->
-    </div>
-    <div class="cont_centrar">
-        <div class="cont_todo_list_top">
-            <div class="cont_titulo_cont">
-                <h3>TODO</h3>
+        </il>
+        <il>
+            <div class="cont_titulo_cont_wo_count">
+                <h3>BACKLOG</h3>
             </div>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <div class="cont_princ_lists">
-            <ul id='todo_list'>
-                <!-- <li class="list_todo"></li>
-                     <li class="list_scheduled"></li>
-                   -->
-            </ul>
-            <!--   End cont_todo_list_top  -->
-        </div>
-        <!--   End cont_central  -->
-    </div>
+            <div class="cont_princ_lists">
+                <ul id='todo_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->
+                </ul>
+            </div>
+        </il>
+        <il>
+            <div class="cont_titulo_cont_w_count">
+                <h3>DO-TODAY</h3>
+            </div>
+            <div class="cont_add_titulo_cont">
+                <i id="scheduled_task_count" class="material-icons"></i>
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='scheduled_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->
+                </ul>
+            </div>
+        </il>
+        <il>
+            <div class="cont_titulo_cont_w_count">
+                <h3>IN-PROGRESS</h3>
+            </div>
+            <div class="cont_add_titulo_cont">
+                <i id="started_task_count" class="material-icons"></i>
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='started_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->
+                </ul>
+            </div>
+        </il>
+        <il>
+            <div class="cont_titulo_cont_wo_count">
+                <h3>DONE</h3>
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='done_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->
+                </ul>
+            </div>
+        </il>
+    </ul>
 </div>

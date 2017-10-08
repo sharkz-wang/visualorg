@@ -3,7 +3,8 @@
 from PyOrgMode.PyOrgMode import OrgDataStructure
 from PyOrgMode.PyOrgMode import OrgDrawer
 from PyOrgMode.PyOrgMode import OrgElement
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 import json
 import time
 import math
@@ -30,6 +31,19 @@ base.load_from_file('../inbox.org')
 root = base.root
 
 is_node = lambda x: isinstance(x, OrgElement) and 'heading' in x.__dict__
+
+def get_state_change_ts(state, content):
+
+    ret_ts = None
+    pattern = r'\s*?-\s+State\s+"%s".*?\[(.*?)\]' % state
+
+    for item in filter(lambda x: isinstance(x, str), content):
+        matched = re.match(pattern, item)
+        if matched:
+            org_date_str = matched.group(1)
+            ret_ts = time.mktime(datetime.strptime(org_date_str, "%Y-%m-%d %a %H:%M").timetuple()) * 1000
+
+    return ret_ts
 
 def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=0):
 
@@ -162,9 +176,41 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     if hasattr(root, 'todo'):
         ret_todo = dict()
         ret_todo['state'] = root.todo
+        ret_todo['milestone'] = project if project else ""
         ret_todo['name'] = root.heading
-        ret_todo['project'] = project
+        ret_todo['task_type'] = root.tags if root.tags else "None"
         ret_todo['description'] = 'no description'
+
+        date_ts = None
+        date_str = None
+
+        if ret_todo['state'] == 'DONE':
+            date_ts = get_state_change_ts(ret_todo['state'], root.content) // 1000
+            date_str = datetime.fromtimestamp(date_ts).strftime('%-m/%d %a %H:%M')
+
+        elif ret_todo['state'] == 'WAITING':
+            date_ts = get_state_change_ts(ret_todo['state'], root.content) // 1000
+
+            abs_date = datetime.fromtimestamp(date_ts).strftime('%-m/%d %a %H:%M')
+
+            curr_ts = int(time.time())
+            delta = datetime(1, 1, 1) + timedelta(seconds=curr_ts - date_ts)
+            rel_date = "~ %d days %d hrs" % (delta.day-1, delta.hour)
+
+            date_str = rel_date + "\n" + abs_date
+
+        elif ret_todo['state'] == 'STARTED':
+            date_ts = get_state_change_ts(ret_todo['state'], root.content) // 1000
+
+            curr_ts = int(time.time())
+            delta = datetime(1, 1, 1) + timedelta(seconds=curr_ts - date_ts)
+            rel_date = "~ %d days %d hrs" % (delta.day-1, delta.hour)
+
+            date_str = rel_date
+
+        ret_todo['date_ts'] = date_ts
+        ret_todo['date_str'] = date_str
+
         ret_todo_list.append(ret_todo)
 
         ret_mindmap['todo'] = root.todo
@@ -265,6 +311,14 @@ out_f.close()
 
 tmpl_f = open('./kanban/index_tmpl.html')
 tmpl_txt = tmpl_f.read()
+
+has_done_date = lambda task: task['state'] == 'DONE' and 'date_ts' in task
+done_tasks = filter(has_done_date, todo)
+other_tasks = filter(lambda task: not has_done_date(task), todo)
+
+done_tasks_sorted_desc = sorted(done_tasks, key=lambda task: task['date_ts'], reverse=True)
+
+todo = done_tasks_sorted_desc + other_tasks
 
 tmpl = Template(tmpl_txt.decode('utf-8'))
 result = tmpl.render(task_list=json.dumps(todo, ensure_ascii=False).decode('utf-8'))
