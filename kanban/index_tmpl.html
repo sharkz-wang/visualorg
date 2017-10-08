@@ -41,7 +41,7 @@
  .cont_titulo_cont {
      position: relative;
      float: left;
-     width: 500px;
+     width: 430px;
      height: 60px;
      background: rgb(42,72,107);
      background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
@@ -49,6 +49,26 @@
      background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
      font-family: 'Open Sans', sans-serif;
+ }
+
+ .cont_add_titulo_cont {
+     position: relative;
+     float: left;
+     width: 70px;
+     height: 60px;
+     background: rgb(42,72,107);
+     background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
+     background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
+
+ }
+
+ .cont_add_titulo_cont > i {
+     display: block;
+     color: #fff;
+     font-size: 32px;
+     margin-top: 9px;
  }
 
  body {
@@ -219,6 +239,12 @@
 
  window.onload = function () {
 
+     scheduled_count = 0;
+     started_count = 0;
+     wait_count = 0;
+     todo_count = 0;
+     done_count = 0;
+
      tasks.forEach(function (task) {
 
          switch (task['state']) {
@@ -226,27 +252,32 @@
                  list_id = 'scheduled_list'
                  li_class_name = 'list_scheduled'
                  done_date = 'TODAY'
+                 scheduled_count ++;
                  break;
              case "STARTED":
                  list_id = 'started_list'
                  li_class_name = 'list_started'
                  done_date = task['date_str']
+                 started_count ++;
                  break;
              case "WAITING":
                  list_id = 'wait_list'
                  li_class_name = 'list_wait'
                  done_date = task['date_str']
+                 wait_count ++;
                  break;
              case "TODO":
                  list_id = 'todo_list'
                  li_class_name = 'list_todo'
                  /* no need to show time info in backlog*/
                  done_date = ''
+                 todo_count ++;
                  break;
              case "DONE":
                  list_id = 'done_list'
                  li_class_name = 'list_done'
                  done_date = task['date_str']
+                 done_count ++;
                  break;
              default:
                  return;
@@ -290,6 +321,17 @@
              `;
          list_root.appendChild(elem);
      });
+
+     scheduled_count_elem = document.getElementById("scheduled_task_count");
+     scheduled_count_elem.innerText = scheduled_count;
+     started_count_elem = document.getElementById("started_task_count");
+     started_count_elem.innerText = started_count;
+     wait_count_elem = document.getElementById("wait_task_count");
+     wait_count_elem.innerText = wait_count;
+     todo_count_elem = document.getElementById("todo_task_count");
+     todo_count_elem.innerText = todo_count;
+     done_count_elem = document.getElementById("done_task_count");
+     done_count_elem.innerText = done_count;
  }
 </script>
 <div class="cont_principal">
@@ -297,6 +339,9 @@
         <il>
             <div class="cont_titulo_cont">
                 <h3>PENDING</h3>
+            </div>
+            <div class="cont_add_titulo_cont">
+                <i id="wait_task_count" class="material-icons"></i>
             </div>
             <div class="cont_princ_lists">
                 <ul id='wait_list'>
@@ -310,6 +355,9 @@
             <div class="cont_titulo_cont">
                 <h3>BACKLOG</h3>
             </div>
+            <div class="cont_add_titulo_cont">
+                <i id="todo_task_count" class="material-icons"></i>
+            </div>
             <div class="cont_princ_lists">
                 <ul id='todo_list'>
                     <!-- <li class="list_todo"></li>
@@ -321,6 +369,9 @@
         <il>
             <div class="cont_titulo_cont">
                 <h3>DO-TODAY</h3>
+            </div>
+            <div class="cont_add_titulo_cont">
+                <i id="scheduled_task_count" class="material-icons"></i>
             </div>
             <div class="cont_princ_lists">
                 <ul id='scheduled_list'>
@@ -334,6 +385,9 @@
             <div class="cont_titulo_cont">
                 <h3>IN-PROGRESS</h3>
             </div>
+            <div class="cont_add_titulo_cont">
+                <i id="started_task_count" class="material-icons"></i>
+            </div>
             <div class="cont_princ_lists">
                 <ul id='started_list'>
                     <!-- <li class="list_todo"></li>
@@ -345,6 +399,9 @@
         <il>
             <div class="cont_titulo_cont">
                 <h3>DONE</h3>
+            </div>
+            <div class="cont_add_titulo_cont">
+                <i id="done_task_count" class="material-icons"></i>
             </div>
             <div class="cont_princ_lists">
                 <ul id='done_list'>
