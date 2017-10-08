@@ -55,6 +55,9 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     # chomp trailing whitespaces
     root.heading = root.heading.rstrip()
 
+    if is_project:
+        project = root.heading
+
     start_ts_ms = None
     end_ts_ms = None
 
@@ -177,7 +180,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         (_mdmp, _todo_lsit, _gantt_list, _timeline) = tree2dict(node,
                                                                 get_nodes,
                                                                 project_subtree,
-                                                                root.heading if is_project else "None",
+                                                                project,
                                                                 gantt_level)
         ret_gantt = ret_gantt + _gantt_list
 
