@@ -27,7 +27,7 @@
      float: left;
  }
 
- .cont_titulo_cont > h3 {
+ .cont_titulo_cont_w_count > h3 {
      text-spacign:2px;
      text-align: left;
      margin-left: 25px;
@@ -38,10 +38,34 @@
      margin-top: 23px;
  }
 
- .cont_titulo_cont {
+ .cont_titulo_cont_w_count {
      position: relative;
      float: left;
      width: 430px;
+     height: 60px;
+     background: rgb(42,72,107);
+     background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
+     background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
+     font-family: 'Open Sans', sans-serif;
+ }
+
+ .cont_titulo_cont_wo_count > h3 {
+     text-spacign:2px;
+     text-align: left;
+     margin-left: 25px;
+     letter-spacing:7px;
+     font-size: 12px;
+     color: #fff;
+     font-weight: 400;
+     margin-top: 23px;
+ }
+
+ .cont_titulo_cont_wo_count {
+     position: relative;
+     float: left;
+     width: 500px;
      height: 60px;
      background: rgb(42,72,107);
      background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
@@ -242,8 +266,6 @@
      scheduled_count = 0;
      started_count = 0;
      wait_count = 0;
-     todo_count = 0;
-     done_count = 0;
 
      tasks.forEach(function (task) {
 
@@ -271,13 +293,11 @@
                  li_class_name = 'list_todo'
                  /* no need to show time info in backlog*/
                  done_date = ''
-                 todo_count ++;
                  break;
              case "DONE":
                  list_id = 'done_list'
                  li_class_name = 'list_done'
                  done_date = task['date_str']
-                 done_count ++;
                  break;
              default:
                  return;
@@ -328,16 +348,12 @@
      started_count_elem.innerText = started_count;
      wait_count_elem = document.getElementById("wait_task_count");
      wait_count_elem.innerText = wait_count;
-     todo_count_elem = document.getElementById("todo_task_count");
-     todo_count_elem.innerText = todo_count;
-     done_count_elem = document.getElementById("done_task_count");
-     done_count_elem.innerText = done_count;
  }
 </script>
 <div class="cont_principal">
     <ul class="kanban_column" >
         <il>
-            <div class="cont_titulo_cont">
+            <div class="cont_titulo_cont_w_count">
                 <h3>PENDING</h3>
             </div>
             <div class="cont_add_titulo_cont">
@@ -352,11 +368,8 @@
             </div>
         </il>
         <il>
-            <div class="cont_titulo_cont">
+            <div class="cont_titulo_cont_wo_count">
                 <h3>BACKLOG</h3>
-            </div>
-            <div class="cont_add_titulo_cont">
-                <i id="todo_task_count" class="material-icons"></i>
             </div>
             <div class="cont_princ_lists">
                 <ul id='todo_list'>
@@ -367,7 +380,7 @@
             </div>
         </il>
         <il>
-            <div class="cont_titulo_cont">
+            <div class="cont_titulo_cont_w_count">
                 <h3>DO-TODAY</h3>
             </div>
             <div class="cont_add_titulo_cont">
@@ -382,7 +395,7 @@
             </div>
         </il>
         <il>
-            <div class="cont_titulo_cont">
+            <div class="cont_titulo_cont_w_count">
                 <h3>IN-PROGRESS</h3>
             </div>
             <div class="cont_add_titulo_cont">
@@ -397,11 +410,8 @@
             </div>
         </il>
         <il>
-            <div class="cont_titulo_cont">
+            <div class="cont_titulo_cont_wo_count">
                 <h3>DONE</h3>
-            </div>
-            <div class="cont_add_titulo_cont">
-                <i id="done_task_count" class="material-icons"></i>
             </div>
             <div class="cont_princ_lists">
                 <ul id='done_list'>
