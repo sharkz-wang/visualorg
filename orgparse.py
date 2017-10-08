@@ -176,6 +176,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     if hasattr(root, 'todo'):
         ret_todo = dict()
         ret_todo['state'] = root.todo
+        ret_todo['milestone'] = project if project else ""
         ret_todo['name'] = root.heading
         ret_todo['task_type'] = root.tags if root.tags else "None"
         ret_todo['description'] = 'no description'

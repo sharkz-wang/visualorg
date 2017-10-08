@@ -236,8 +236,18 @@
      color: #e45;
  }
 
+ .list_started span {
+     font-weight: bold;
+     color: #e45;
+ }
+
  .list_wait > .col_md_1_list {
      border-left: 4px solid #e45;
+     color: #e45;
+ }
+
+ .list_wait span {
+     font-weight: bold;
      color: #e45;
  }
 
@@ -246,13 +256,28 @@
      color: #2A476B;
  }
 
+ .list_todo span {
+     font-weight: bold;
+     color: #2A476B;
+ }
+
  .list_scheduled > .col_md_1_list {
      border-left: 4px solid #EF8A18;
      color: #EF8A18;
  }
 
+ .list_scheduled span {
+     font-weight: bold;
+     color: #EF8A18;
+ }
+
  .list_done > .col_md_1_list {
      border-left: 4px solid #a9a9a9;
+     color: #a9a9a9;
+ }
+
+ .list_done span {
+     font-weight: bold;
      color: #a9a9a9;
  }
 
@@ -320,7 +345,7 @@
              <div class="col_md_2_list">
                 <h4>
              ` +
-             task['name'] +
+             (task['milestone'] ? ('<span>' + task['milestone'] + "/</span>") : "" ) + task['name'] +
              `
                 </h4>
                 <p>
