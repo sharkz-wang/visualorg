@@ -3,7 +3,8 @@
 from PyOrgMode.PyOrgMode import OrgDataStructure
 from PyOrgMode.PyOrgMode import OrgDrawer
 from PyOrgMode.PyOrgMode import OrgElement
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 import json
 import time
 import math
@@ -30,6 +31,19 @@ base.load_from_file('../inbox.org')
 root = base.root
 
 is_node = lambda x: isinstance(x, OrgElement) and 'heading' in x.__dict__
+
+def get_state_change_ts(state, content):
+
+    ret_ts = None
+    pattern = r'\s*?-\s+State\s+"%s".*?\[(.*?)\]' % state
+
+    for item in filter(lambda x: isinstance(x, str), content):
+        matched = re.match(pattern, item)
+        if matched:
+            org_date_str = matched.group(1)
+            ret_ts = time.mktime(datetime.strptime(org_date_str, "%Y-%m-%d %a %H:%M").timetuple()) * 1000
+
+    return ret_ts
 
 def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=0):
 
@@ -165,10 +179,37 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         ret_todo['name'] = root.heading
         ret_todo['project'] = project
         ret_todo['description'] = 'no description'
+
+        date_ts = None
+        date_str = None
+
         if ret_todo['state'] == 'DONE':
-            if len(root.content) > 0 and\
-               hasattr(root.content[0], 'closed'):
-                ret_todo['date_ts'] = int(time.mktime(root.content[0].closed.value) * 1000)
+            date_ts = get_state_change_ts(ret_todo['state'], root.content) // 1000
+            date_str = datetime.fromtimestamp(date_ts).strftime('%-m/%d %a %H:%M')
+
+        elif ret_todo['state'] == 'WAITING':
+            date_ts = get_state_change_ts(ret_todo['state'], root.content) // 1000
+
+            abs_date = datetime.fromtimestamp(date_ts).strftime('%-m/%d %a %H:%M')
+
+            curr_ts = int(time.time())
+            delta = datetime(1, 1, 1) + timedelta(seconds=curr_ts - date_ts)
+            rel_date = "~ %d days %d hrs" % (delta.day-1, delta.hour)
+
+            date_str = rel_date + "\n" + abs_date
+
+        elif ret_todo['state'] == 'STARTED':
+            date_ts = get_state_change_ts(ret_todo['state'], root.content) // 1000
+
+            curr_ts = int(time.time())
+            delta = datetime(1, 1, 1) + timedelta(seconds=curr_ts - date_ts)
+            rel_date = "~ %d days %d hrs" % (delta.day-1, delta.hour)
+
+            date_str = rel_date
+
+        ret_todo['date_ts'] = date_ts
+        ret_todo['date_str'] = date_str
+
         ret_todo_list.append(ret_todo)
 
         ret_mindmap['todo'] = root.todo

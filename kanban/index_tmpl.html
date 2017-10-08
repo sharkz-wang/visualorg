@@ -131,7 +131,7 @@
  .col_md_3_list > .cont_text_date {
      text-align: right;
      font-family: 'Open Sans', sans-serif;
-     font-size: 14px;
+     font-size: 13px;
      font-weight: 700;
  }
 
@@ -225,22 +225,28 @@
              case "SCHEDULED":
                  list_id = 'scheduled_list'
                  li_class_name = 'list_scheduled'
+                 done_date = 'TODAY'
                  break;
              case "STARTED":
                  list_id = 'started_list'
                  li_class_name = 'list_started'
+                 done_date = task['date_str']
                  break;
              case "WAITING":
                  list_id = 'wait_list'
                  li_class_name = 'list_wait'
+                 done_date = task['date_str']
                  break;
              case "TODO":
                  list_id = 'todo_list'
                  li_class_name = 'list_todo'
+                 /* no need to show time info in backlog*/
+                 done_date = ''
                  break;
              case "DONE":
                  list_id = 'done_list'
                  li_class_name = 'list_done'
+                 done_date = task['date_str']
                  break;
              default:
                  return;
@@ -274,7 +280,11 @@
              </div>
              <div class="col_md_3_list">
                 <div class="cont_text_date">
-                    <p>TODAY</p>
+                    <p>
+              ` +
+              done_date +
+              `
+                    </p>
                 </div>
              </div>
              `;
