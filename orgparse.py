@@ -16,6 +16,7 @@ from jinja2 import Template
 hide_hidden_tasks = True
 hide_done_tasks = True
 enable_default_folding = True
+kanban_show_priority_value = False
 
 project_subtree_tag = 'Project'
 milestone_tag = 'Milestone'
@@ -64,6 +65,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     is_folded = folded_subtree_tag in root.tags
     is_done = hasattr(root, 'todo') and root.todo in done_keyword_list
     progress = 100 if (hasattr(root, 'todo') and root.todo == 'DONE') else 0
+    user_defined_priority = 0
     hidden_until = None
 
     if is_archived or (hide_hidden_tasks and is_hidden):
@@ -109,6 +111,8 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
                 progress = prop.value
             if prop.name == 'HIDE_UNTIL':
                 hidden_until = prop.value
+            if prop.name == 'USER_PRIORITY':
+                user_defined_priority = int(prop.value)
 
     if hidden_until:
         org_date = OrgDate(hidden_until)
@@ -194,8 +198,9 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         ret_todo['state'] = root.todo
         ret_todo['milestone'] = project if project else ""
         ret_todo['name'] = root.heading
-        ret_todo['task_type'] = root.tags if root.tags else "None"
+        ret_todo['task_type'] = root.tags[0] if root.tags else "None"
         ret_todo['description'] = 'no description'
+        ret_todo['priority'] = user_defined_priority
 
         date_ts = None
         date_str = None
@@ -341,13 +346,46 @@ out_f.close()
 tmpl_f = open('./kanban/index_tmpl.html')
 tmpl_txt = tmpl_f.read()
 
+# sort done tasks by done date
 has_done_date = lambda task: task['state'] == 'DONE' and 'date_ts' in task
 done_tasks = filter(has_done_date, todo)
 other_tasks = filter(lambda task: not has_done_date(task), todo)
 
 done_tasks_sorted_desc = sorted(done_tasks, key=lambda task: task['date_ts'], reverse=True)
 
-todo = done_tasks_sorted_desc + other_tasks
+# sort scheduled tasks by priority
+is_scheduled_tasks = lambda task: task['state'] == 'SCHEDULED'
+scheduled_tasks = filter(is_scheduled_tasks, other_tasks)
+other_tasks = filter(lambda task: not is_scheduled_tasks(task), other_tasks)
+
+# if specified to show priority, combine priority and task type
+if kanban_show_priority_value:
+    for task in scheduled_tasks:
+        task['task_type'] = "%s (%d)" % (task['task_type'], task['priority'])
+
+scheduled_tasks_sorted_priority_desc = sorted(scheduled_tasks,
+                                              key=lambda task: task['priority'],
+                                              reverse=True)
+
+# sort started tasks by priority
+is_started_tasks = lambda task: task['state'] == 'STARTED'
+started_tasks = filter(is_started_tasks, other_tasks)
+other_tasks = filter(lambda task: not is_started_tasks(task), other_tasks)
+
+# if specified to show priority, combine priority and task type
+if kanban_show_priority_value:
+    for task in started_tasks:
+        task['task_type'] = "%s (%d)" % (task['task_type'], task['priority'])
+
+started_tasks_sorted_priority_desc = sorted(started_tasks,
+                                            key=lambda task: task['priority'],
+                                            reverse=True)
+
+# combine sorted tasks
+todo = scheduled_tasks_sorted_priority_desc +\
+       started_tasks_sorted_priority_desc +\
+       done_tasks_sorted_desc +\
+       other_tasks
 
 tmpl = Template(tmpl_txt.decode('utf-8'))
 result = tmpl.render(task_list=json.dumps(todo, ensure_ascii=False).decode('utf-8'))
