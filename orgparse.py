@@ -16,6 +16,7 @@ from jinja2 import Template
 hide_hidden_tasks = True
 hide_done_tasks = True
 enable_default_folding = True
+kanban_show_priority_value = False
 
 project_subtree_tag = 'Project'
 milestone_tag = 'Milestone'
@@ -197,7 +198,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         ret_todo['state'] = root.todo
         ret_todo['milestone'] = project if project else ""
         ret_todo['name'] = root.heading
-        ret_todo['task_type'] = root.tags if root.tags else "None"
+        ret_todo['task_type'] = root.tags[0] if root.tags else "None"
         ret_todo['description'] = 'no description'
         ret_todo['priority'] = user_defined_priority
 
@@ -357,6 +358,11 @@ is_scheduled_tasks = lambda task: task['state'] == 'SCHEDULED'
 scheduled_tasks = filter(is_scheduled_tasks, other_tasks)
 other_tasks = filter(lambda task: not is_scheduled_tasks(task), other_tasks)
 
+# if specified to show priority, combine priority and task type
+if kanban_show_priority_value:
+    for task in scheduled_tasks:
+        task['task_type'] = "%s (%d)" % (task['task_type'], task['priority'])
+
 scheduled_tasks_sorted_priority_desc = sorted(scheduled_tasks,
                                               key=lambda task: task['priority'],
                                               reverse=True)
@@ -365,6 +371,11 @@ scheduled_tasks_sorted_priority_desc = sorted(scheduled_tasks,
 is_started_tasks = lambda task: task['state'] == 'STARTED'
 started_tasks = filter(is_started_tasks, other_tasks)
 other_tasks = filter(lambda task: not is_started_tasks(task), other_tasks)
+
+# if specified to show priority, combine priority and task type
+if kanban_show_priority_value:
+    for task in started_tasks:
+        task['task_type'] = "%s (%d)" % (task['task_type'], task['priority'])
 
 started_tasks_sorted_priority_desc = sorted(started_tasks,
                                             key=lambda task: task['priority'],
