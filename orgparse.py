@@ -62,6 +62,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     is_hidden = hidden_tag in root.tags
     is_folded = folded_subtree_tag in root.tags
     is_done = hasattr(root, 'todo') and root.todo in done_keyword_list
+    progress = 100 if (hasattr(root, 'todo') and root.todo == 'DONE') else 0
 
     if is_archived or (hide_hidden_tasks and is_hidden):
         return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
@@ -102,6 +103,8 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
                 node_id = prop.value
             if prop.name == 'DEPENDENCY':
                 dep_id.append(prop.value)
+            if prop.name == 'PROGRESS':
+                progress = prop.value
 
     ret_mindmap['name'] = root.heading
 
@@ -129,7 +132,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         ret_gantt.append({
             "id": node_id,
             "name": root.heading,
-            "progress": 0,
+            "progress": progress,
             "progressByWorklog": False,
             "relevance": 0,
             "type": "",
