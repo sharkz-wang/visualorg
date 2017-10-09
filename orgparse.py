@@ -24,7 +24,7 @@ archived_tag = 'Archived'
 hidden_tag = 'Hidden'
 folded_subtree_tag = 'Folded'
 
-todo_keyword_list = [ 'TODO', 'STARTED', 'WAITING', 'SCHEDULED' ]
+todo_keyword_list = [ 'TODO', 'UPCOMING', 'STARTED', 'WAITING', 'SCHEDULED' ]
 done_keyword_list = [ 'DONE', 'ABORTED', 'SUSPENDED' ]
 
 base = OrgDataStructure()

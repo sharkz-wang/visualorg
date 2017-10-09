@@ -7,7 +7,7 @@
  .cont_principal {
      position: absolute;
      /* XXX: hard-coded */
-     width: 3000px;
+     width: 3340px;
      height: 100%;
      overflow: auto;
      background: rgb(250,249,247);
@@ -261,6 +261,16 @@
      color: #2A476B;
  }
 
+ .list_upcoming > .col_md_1_list {
+     border-left: 4px solid #EF8A18;
+     color: #EF8A18;
+ }
+
+.list_upcoming span {
+     font-weight: bold;
+     color: #EF8A18;
+ }
+
  .list_scheduled > .col_md_1_list {
      border-left: 4px solid #EF8A18;
      color: #EF8A18;
@@ -299,6 +309,13 @@
                  list_id = 'scheduled_list'
                  li_class_name = 'list_scheduled'
                  done_date = 'TODAY'
+                 scheduled_count ++;
+                 break;
+             case "UPCOMING":
+                 list_id = 'upcoming_list'
+                 li_class_name = 'list_upcoming'
+                 /* no need to show time info in upcoming tasks */
+                 done_date = ''
                  scheduled_count ++;
                  break;
              case "STARTED":
@@ -398,6 +415,18 @@
             </div>
             <div class="cont_princ_lists">
                 <ul id='todo_list'>
+                    <!-- <li class="list_todo"></li>
+                         <li class="list_scheduled"></li>
+                       -->
+                </ul>
+            </div>
+        </il>
+        <il>
+            <div class="cont_titulo_cont_wo_count">
+                <h3>UPCOMING</h3>
+            </div>
+            <div class="cont_princ_lists">
+                <ul id='upcoming_list'>
                     <!-- <li class="list_todo"></li>
                          <li class="list_scheduled"></li>
                        -->
