@@ -225,13 +225,14 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     ret_mindmap['children'] = []
     ret_mindmap['_children'] = []
 
+    child_gantt_nodes = []
     for node in get_nodes(root):
         (_mdmp, _todo_lsit, _gantt_list, _timeline) = tree2dict(node,
                                                                 get_nodes,
                                                                 project_subtree,
                                                                 project,
                                                                 gantt_level)
-        ret_gantt = ret_gantt + _gantt_list
+        child_gantt_nodes = child_gantt_nodes + _gantt_list
 
         ret_todo_list = ret_todo_list + _todo_lsit
         if _mdmp:
@@ -241,6 +242,18 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
                 ret_mindmap['children'].append(_mdmp)
 
         ret_timeline['events'] = _timeline['events'] + ret_timeline['events']
+
+    # re-calculating progress based on child tasks
+    gantt_child_count = len(child_gantt_nodes)
+    gantt_done_child_count = len(filter(lambda task: task['progress'] == 100, child_gantt_nodes))
+    if not hasattr(root, 'todo') and\
+       len(root.content) > 0 and\
+       hasattr(root.content[0], 'scheduled') and\
+       hasattr(root.content[0], 'deadline') and\
+       gantt_child_count > 0:
+        ret_gantt[len(ret_gantt) - 1]['progress'] = (gantt_done_child_count // gantt_child_count) * 100
+
+    ret_gantt = ret_gantt + child_gantt_nodes
 
     if not ret_mindmap['children']:
         del ret_mindmap['children']
