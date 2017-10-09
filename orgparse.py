@@ -3,6 +3,7 @@
 from PyOrgMode.PyOrgMode import OrgDataStructure
 from PyOrgMode.PyOrgMode import OrgDrawer
 from PyOrgMode.PyOrgMode import OrgElement
+from PyOrgMode.PyOrgMode import OrgDate
 import re
 from datetime import datetime, timedelta
 import json
@@ -63,6 +64,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     is_folded = folded_subtree_tag in root.tags
     is_done = hasattr(root, 'todo') and root.todo in done_keyword_list
     progress = 100 if (hasattr(root, 'todo') and root.todo == 'DONE') else 0
+    hidden_until = None
 
     if is_archived or (hide_hidden_tasks and is_hidden):
         return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
@@ -105,6 +107,17 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
                 dep_id.append(prop.value)
             if prop.name == 'PROGRESS':
                 progress = prop.value
+            if prop.name == 'HIDE_UNTIL':
+                hidden_until = prop.value
+
+    if hidden_until:
+        org_date = OrgDate(hidden_until)
+
+        hidden_until_ts = int(time.mktime(org_date.value))
+        curr_ts = int(time.time())
+
+        if curr_ts < hidden_until_ts:
+            return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
 
     ret_mindmap['name'] = root.heading
 
