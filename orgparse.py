@@ -68,7 +68,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     user_defined_priority = 0
     hidden_until = None
 
-    if is_archived or (hide_hidden_tasks and is_hidden):
+    if is_archived:
         return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
 
     # chomp trailing whitespaces
@@ -121,7 +121,7 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
         curr_ts = int(time.time())
 
         if curr_ts < hidden_until_ts:
-            return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
+            is_hidden = True
 
     ret_mindmap['name'] = root.heading
 
@@ -282,7 +282,10 @@ def tree2dict(root, get_nodes, project_subtree=False, project=None, gantt_level=
     if hide_done_tasks and is_done:
         ret_mindmap = dict()
 
-    return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
+    if (hide_hidden_tasks and is_hidden):
+        return (dict(), [], ret_gantt, { 'events': [], 'legends': [] })
+    else:
+        return (ret_mindmap, ret_todo_list, ret_gantt, ret_timeline)
 
 root.heading = '/'
 (mindmap, todo, gantt, timeline) = tree2dict(root, lambda n: filter(is_node, n.content))
