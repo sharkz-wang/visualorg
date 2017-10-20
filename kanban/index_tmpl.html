@@ -1,3 +1,6 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <style>
  * {
      margin: 0px auto;
@@ -292,11 +295,15 @@
  }
 
 </style>
+</head>
+<body>
 <script>
 
  var tasks = {{ task_list }};
 
  window.onload = function () {
+
+     $("html,body").animate({ scrollLeft: 1000 }, "fast");
 
      scheduled_count = 0;
      started_count = 0;
@@ -477,3 +484,5 @@
         </il>
     </ul>
 </div>
+</body>
+</html>
