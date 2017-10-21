@@ -1,488 +1,488 @@
 <html>
-<head>
-<script src="./jquery.min.js"></script>
-<style>
- * {
-     margin: 0px auto;
-     padding: 0px;
-     text-align: center;  
- }
- .cont_principal {
-     position: absolute;
-     /* XXX: hard-coded */
-     width: 3340px;
-     height: 100%;
-     overflow: auto;
-     background: rgb(250,249,247);
-     background: -moz-linear-gradient(-45deg,  rgba(250,249,247,1) 0%, rgba(221,218,209,1) 100%);
-     background: -webkit-linear-gradient(-45deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
-     background: linear-gradient(135deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f7', endColorstr='#dddad1',GradientType=1 );
- }
-
- .kanban_column {
-     margin: 100px;
- }
-
- .kanban_column il {
-     margin: 10px;
-     width: 500px;
-     float: left;
- }
-
- .cont_titulo_cont_w_count > h3 {
-     text-spacign:2px;
-     text-align: left;
-     margin-left: 25px;
-     letter-spacing:7px;
-     font-size: 12px;
-     color: #fff;
-     font-weight: 400;
-     margin-top: 23px;
- }
-
- .cont_titulo_cont_w_count {
-     position: relative;
-     float: left;
-     width: 430px;
-     height: 60px;
-     background: rgb(42,72,107);
-     background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
-     background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
-     background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
-     font-family: 'Open Sans', sans-serif;
- }
-
- .cont_titulo_cont_wo_count > h3 {
-     text-spacign:2px;
-     text-align: left;
-     margin-left: 25px;
-     letter-spacing:7px;
-     font-size: 12px;
-     color: #fff;
-     font-weight: 400;
-     margin-top: 23px;
- }
-
- .cont_titulo_cont_wo_count {
-     position: relative;
-     float: left;
-     width: 500px;
-     height: 60px;
-     background: rgb(42,72,107);
-     background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
-     background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
-     background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
-     font-family: 'Open Sans', sans-serif;
- }
-
- .cont_add_titulo_cont {
-     position: relative;
-     float: left;
-     width: 70px;
-     height: 60px;
-     background: rgb(42,72,107);
-     background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
-     background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
-     background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
-
- }
-
- .cont_add_titulo_cont > i {
-     display: block;
-     color: #fff;
-     font-size: 32px;
-     margin-top: 9px;
- }
-
- body {
-     background: rgb(250,249,247);
-     background: -moz-linear-gradient(-45deg,  rgba(250,249,247,1) 0%, rgba(221,218,209,1) 100%);
-     background: -webkit-linear-gradient(-45deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
-     background: linear-gradient(135deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f7', endColorstr='#dddad1',GradientType=1 );
-
- }
-
- .cont_princ_lists {
-     position: relative;
-     float: left;
-     width: 100%;
-     margin-top: 15px;
- }
-
- .cont_princ_lists > ul > li {
-     position: relative;
-     float: left;
-     width: 100%;
-     height: 75px;
-     left: 0;
-     background-color: #F1F1EF;
-     list-style: none;
-     box-shadow: 1px 10px 20px 0px rgba(218, 215, 206,0.8);
-     z-index: 2;
-     -webkit-transition: all 0.5s;
-     -o-transition: all 0.5s;
-     transition: all 0.5s;
- }
-
- .col_md_1_list {
-     width: 125px;
-     position: relative;
-     float: left;
-     height: 20px;
-     top:50%;
-     margin-top: -10px;
- }
-
- .col_md_1_list > p {
-     font-family: 'Open Sans', sans-serif;
-     font-size: 14px;
-     font-weight: 700;
- }
-
- .col_md_2_list {
-     width: 250px;
-     position: relative;
-     float: left;
-     margin-top: 20px;
- }
-
- .col_md_2_list  > h4 {
-     text-align: left;
-     font-family: 'Open Sans', sans-serif;
-     font-size: 14px;
-     font-weight: 700;
- }
-
- .col_md_2_list  > p {
-     text-align: left;
-     font-family: 'Open Sans', sans-serif;
-     font-size: 10px;
-     font-weight: 700;
-     color: #999;
- }
-
- .col_md_3_list {
-     width: 121px;
-     position: relative;
-     float: left;
-     height: 14px;
-     top:50%;
-     margin-top: -10px;
- }
-
- .col_md_3_list > .cont_text_date {
-     text-align: right;
-     font-family: 'Open Sans', sans-serif;
-     font-size: 13px;
-     font-weight: 700;
- }
-
- .col_md_3_list > .cont_text_date > p {
-     text-align: right;
-     margin-right: 20px;
- }
-
- .col_md_3_list:hover > .cont_btns_options{
-     opacity: 1;
- }
-
- .col_md_3_list > .cont_btns_options{
-     position: absolute;
-     width: 100%;
-     opacity: 0;
-     -webkit-transition: all 0.5s;
-     -o-transition: all 0.5s;
-     transition: all 0.5s;
-     background-color: #F1F1EF;
-     width: 100%;
-     height: 47px;
-     top: 0px;
- }
-
- .col_md_3_list > .cont_btns_options > ul > li {
-     position: relative;
-     float: right;
-     width: 100%;
-     list-style-type: none;
- }
-
- .col_md_3_list > .cont_btns_options > ul > li:nth-child(1) > a {
-     /*   background-color: #ef5350; */
- }
-
- .col_md_3_list > .cont_btns_options > ul > li > a {
-     display: block;
-     width: 20px;
-     height: 15px;
-     background-color: #4C75A1;
-     padding: 5px 3px;
-     border-radius: 50%;
-     color: #fff;
-     margin-top: -5px;
- }
-
- .col_md_3_list > .cont_btns_options > ul > li > a > i {
-     font-size: 15px;
- }
-
- .list_todo {
-     z-index: 1;
- }
-
- .list_started > .col_md_1_list {
-     border-left: 4px solid #e45;
-     color: #e45;
- }
-
- .list_started span {
-     font-weight: bold;
-     color: #e45;
- }
-
- .list_wait > .col_md_1_list {
-     border-left: 4px solid #e45;
-     color: #e45;
- }
-
- .list_wait span {
-     font-weight: bold;
-     color: #e45;
- }
-
- .list_todo > .col_md_1_list {
-     border-left: 4px solid #2A476B;
-     color: #2A476B;
- }
-
- .list_todo span {
-     font-weight: bold;
-     color: #2A476B;
- }
-
- .list_upcoming > .col_md_1_list {
-     border-left: 4px solid #EF8A18;
-     color: #EF8A18;
- }
-
-.list_upcoming span {
-     font-weight: bold;
-     color: #EF8A18;
- }
-
- .list_scheduled > .col_md_1_list {
-     border-left: 4px solid #EF8A18;
-     color: #EF8A18;
- }
-
- .list_scheduled span {
-     font-weight: bold;
-     color: #EF8A18;
- }
-
- .list_done > .col_md_1_list {
-     border-left: 4px solid #a9a9a9;
-     color: #a9a9a9;
- }
-
- .list_done span {
-     font-weight: bold;
-     color: #a9a9a9;
- }
-
-</style>
-</head>
-<body>
-<script>
-
- var tasks = {{ task_list }};
-
- window.onload = function () {
-
-     $("html,body").animate({ scrollLeft: 1000 }, "fast");
-
-     scheduled_count = 0;
-     started_count = 0;
-     wait_count = 0;
-
-     tasks.forEach(function (task) {
-
-         switch (task['state']) {
-             case "SCHEDULED":
-                 list_id = 'scheduled_list'
-                 li_class_name = 'list_scheduled'
-                 done_date = 'TODAY'
-                 scheduled_count ++;
-                 break;
-             case "UPCOMING":
-                 list_id = 'upcoming_list'
-                 li_class_name = 'list_upcoming'
-                 /* no need to show time info in upcoming tasks */
-                 done_date = ''
-                 scheduled_count ++;
-                 break;
-             case "STARTED":
-                 list_id = 'started_list'
-                 li_class_name = 'list_started'
-                 done_date = task['date_str']
-                 started_count ++;
-                 break;
-             case "WAITING":
-                 list_id = 'wait_list'
-                 li_class_name = 'list_wait'
-                 done_date = task['date_str']
-                 wait_count ++;
-                 break;
-             case "TODO":
-                 list_id = 'todo_list'
-                 li_class_name = 'list_todo'
-                 /* no need to show time info in backlog*/
-                 done_date = ''
-                 break;
-             case "DONE":
-                 list_id = 'done_list'
-                 li_class_name = 'list_done'
-                 done_date = task['date_str']
-                 break;
-             default:
-                 return;
+    <head>
+        <script src="./jquery.min.js"></script>
+        <style>
+         * {
+             margin: 0px auto;
+             padding: 0px;
+             text-align: center;  
+         }
+         .cont_principal {
+             position: absolute;
+             /* XXX: hard-coded */
+             width: 3340px;
+             height: 100%;
+             overflow: auto;
+             background: rgb(250,249,247);
+             background: -moz-linear-gradient(-45deg,  rgba(250,249,247,1) 0%, rgba(221,218,209,1) 100%);
+             background: -webkit-linear-gradient(-45deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
+             background: linear-gradient(135deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
+             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f7', endColorstr='#dddad1',GradientType=1 );
          }
 
-         list_root = document.getElementById(list_id);
+         .kanban_column {
+             margin: 100px;
+         }
 
-         elem = document.createElement('li');
-         elem.classList.add(li_class_name);
+         .kanban_column il {
+             margin: 10px;
+             width: 500px;
+             float: left;
+         }
 
-         elem.innerHTML =
-             `
+         .cont_titulo_cont_w_count > h3 {
+             text-spacign:2px;
+             text-align: left;
+             margin-left: 25px;
+             letter-spacing:7px;
+             font-size: 12px;
+             color: #fff;
+             font-weight: 400;
+             margin-top: 23px;
+         }
+
+         .cont_titulo_cont_w_count {
+             position: relative;
+             float: left;
+             width: 430px;
+             height: 60px;
+             background: rgb(42,72,107);
+             background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
+             background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+             background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
+             font-family: 'Open Sans', sans-serif;
+         }
+
+         .cont_titulo_cont_wo_count > h3 {
+             text-spacign:2px;
+             text-align: left;
+             margin-left: 25px;
+             letter-spacing:7px;
+             font-size: 12px;
+             color: #fff;
+             font-weight: 400;
+             margin-top: 23px;
+         }
+
+         .cont_titulo_cont_wo_count {
+             position: relative;
+             float: left;
+             width: 500px;
+             height: 60px;
+             background: rgb(42,72,107);
+             background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
+             background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+             background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
+             font-family: 'Open Sans', sans-serif;
+         }
+
+         .cont_add_titulo_cont {
+             position: relative;
+             float: left;
+             width: 70px;
+             height: 60px;
+             background: rgb(42,72,107);
+             background: -moz-linear-gradient(left,  rgba(42,72,107,1) 0%, rgba(80,122,167,1) 100%);
+             background: -webkit-linear-gradient(left,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+             background: linear-gradient(to right,  rgba(42,72,107,1) 0%,rgba(80,122,167,1) 100%);
+             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2a486b', endColorstr='#507aa7',GradientType=1 );
+
+         }
+
+         .cont_add_titulo_cont > i {
+             display: block;
+             color: #fff;
+             font-size: 32px;
+             margin-top: 9px;
+         }
+
+         body {
+             background: rgb(250,249,247);
+             background: -moz-linear-gradient(-45deg,  rgba(250,249,247,1) 0%, rgba(221,218,209,1) 100%);
+             background: -webkit-linear-gradient(-45deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
+             background: linear-gradient(135deg,  rgba(250,249,247,1) 0%,rgba(221,218,209,1) 100%);
+             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f7', endColorstr='#dddad1',GradientType=1 );
+
+         }
+
+         .cont_princ_lists {
+             position: relative;
+             float: left;
+             width: 100%;
+             margin-top: 15px;
+         }
+
+         .cont_princ_lists > ul > li {
+             position: relative;
+             float: left;
+             width: 100%;
+             height: 75px;
+             left: 0;
+             background-color: #F1F1EF;
+             list-style: none;
+             box-shadow: 1px 10px 20px 0px rgba(218, 215, 206,0.8);
+             z-index: 2;
+             -webkit-transition: all 0.5s;
+             -o-transition: all 0.5s;
+             transition: all 0.5s;
+         }
+
+         .col_md_1_list {
+             width: 125px;
+             position: relative;
+             float: left;
+             height: 20px;
+             top:50%;
+             margin-top: -10px;
+         }
+
+         .col_md_1_list > p {
+             font-family: 'Open Sans', sans-serif;
+             font-size: 14px;
+             font-weight: 700;
+         }
+
+         .col_md_2_list {
+             width: 250px;
+             position: relative;
+             float: left;
+             margin-top: 20px;
+         }
+
+         .col_md_2_list  > h4 {
+             text-align: left;
+             font-family: 'Open Sans', sans-serif;
+             font-size: 14px;
+             font-weight: 700;
+         }
+
+         .col_md_2_list  > p {
+             text-align: left;
+             font-family: 'Open Sans', sans-serif;
+             font-size: 10px;
+             font-weight: 700;
+             color: #999;
+         }
+
+         .col_md_3_list {
+             width: 121px;
+             position: relative;
+             float: left;
+             height: 14px;
+             top:50%;
+             margin-top: -10px;
+         }
+
+         .col_md_3_list > .cont_text_date {
+             text-align: right;
+             font-family: 'Open Sans', sans-serif;
+             font-size: 13px;
+             font-weight: 700;
+         }
+
+         .col_md_3_list > .cont_text_date > p {
+             text-align: right;
+             margin-right: 20px;
+         }
+
+         .col_md_3_list:hover > .cont_btns_options{
+             opacity: 1;
+         }
+
+         .col_md_3_list > .cont_btns_options{
+             position: absolute;
+             width: 100%;
+             opacity: 0;
+             -webkit-transition: all 0.5s;
+             -o-transition: all 0.5s;
+             transition: all 0.5s;
+             background-color: #F1F1EF;
+             width: 100%;
+             height: 47px;
+             top: 0px;
+         }
+
+         .col_md_3_list > .cont_btns_options > ul > li {
+             position: relative;
+             float: right;
+             width: 100%;
+             list-style-type: none;
+         }
+
+         .col_md_3_list > .cont_btns_options > ul > li:nth-child(1) > a {
+             /*   background-color: #ef5350; */
+         }
+
+         .col_md_3_list > .cont_btns_options > ul > li > a {
+             display: block;
+             width: 20px;
+             height: 15px;
+             background-color: #4C75A1;
+             padding: 5px 3px;
+             border-radius: 50%;
+             color: #fff;
+             margin-top: -5px;
+         }
+
+         .col_md_3_list > .cont_btns_options > ul > li > a > i {
+             font-size: 15px;
+         }
+
+         .list_todo {
+             z-index: 1;
+         }
+
+         .list_started > .col_md_1_list {
+             border-left: 4px solid #e45;
+             color: #e45;
+         }
+
+         .list_started span {
+             font-weight: bold;
+             color: #e45;
+         }
+
+         .list_wait > .col_md_1_list {
+             border-left: 4px solid #e45;
+             color: #e45;
+         }
+
+         .list_wait span {
+             font-weight: bold;
+             color: #e45;
+         }
+
+         .list_todo > .col_md_1_list {
+             border-left: 4px solid #2A476B;
+             color: #2A476B;
+         }
+
+         .list_todo span {
+             font-weight: bold;
+             color: #2A476B;
+         }
+
+         .list_upcoming > .col_md_1_list {
+             border-left: 4px solid #EF8A18;
+             color: #EF8A18;
+         }
+
+         .list_upcoming span {
+             font-weight: bold;
+             color: #EF8A18;
+         }
+
+         .list_scheduled > .col_md_1_list {
+             border-left: 4px solid #EF8A18;
+             color: #EF8A18;
+         }
+
+         .list_scheduled span {
+             font-weight: bold;
+             color: #EF8A18;
+         }
+
+         .list_done > .col_md_1_list {
+             border-left: 4px solid #a9a9a9;
+             color: #a9a9a9;
+         }
+
+         .list_done span {
+             font-weight: bold;
+             color: #a9a9a9;
+         }
+
+        </style>
+    </head>
+    <body>
+        <script>
+
+         var tasks = {{ task_list }};
+
+         window.onload = function () {
+
+             $("html,body").animate({ scrollLeft: 1000 }, "fast");
+
+             scheduled_count = 0;
+             started_count = 0;
+             wait_count = 0;
+
+             tasks.forEach(function (task) {
+
+                 switch (task['state']) {
+                     case "SCHEDULED":
+                         list_id = 'scheduled_list'
+                         li_class_name = 'list_scheduled'
+                         done_date = 'TODAY'
+                         scheduled_count ++;
+                         break;
+                     case "UPCOMING":
+                         list_id = 'upcoming_list'
+                         li_class_name = 'list_upcoming'
+                         /* no need to show time info in upcoming tasks */
+                         done_date = ''
+                         scheduled_count ++;
+                         break;
+                     case "STARTED":
+                         list_id = 'started_list'
+                         li_class_name = 'list_started'
+                         done_date = task['date_str']
+                         started_count ++;
+                         break;
+                     case "WAITING":
+                         list_id = 'wait_list'
+                         li_class_name = 'list_wait'
+                         done_date = task['date_str']
+                         wait_count ++;
+                         break;
+                     case "TODO":
+                         list_id = 'todo_list'
+                         li_class_name = 'list_todo'
+                         /* no need to show time info in backlog*/
+                         done_date = ''
+                         break;
+                     case "DONE":
+                         list_id = 'done_list'
+                         li_class_name = 'list_done'
+                         done_date = task['date_str']
+                         break;
+                     default:
+                         return;
+                 }
+
+                 list_root = document.getElementById(list_id);
+
+                 elem = document.createElement('li');
+                 elem.classList.add(li_class_name);
+
+                 elem.innerHTML =
+                     `
              <div class="col_md_1_list">
                 <p>
              ` +
-             task['task_type'] +
-             `
+                     task['task_type'] +
+                     `
                 </p>
              </div>
              <div class="col_md_2_list">
                 <h4>
              ` +
-             (task['milestone'] ? ('<span>' + task['milestone'] + "/</span>") : "" ) + task['name'] +
-             `
+              (task['milestone'] ? ('<span>' + task['milestone'] + "/</span>") : "" ) + task['name'] +
+                     `
                 </h4>
                 <p>
              ` +
-             task['description'] +
-             `
+                     task['description'] +
+                     `
                 </p>
              </div>
              <div class="col_md_3_list">
                 <div class="cont_text_date">
                     <p>
               ` +
-              done_date +
-              `
+                     done_date +
+                     `
                     </p>
                 </div>
              </div>
              `;
-         list_root.appendChild(elem);
-     });
+                 list_root.appendChild(elem);
+             });
 
-     scheduled_count_elem = document.getElementById("scheduled_task_count");
-     scheduled_count_elem.innerText = scheduled_count;
-     started_count_elem = document.getElementById("started_task_count");
-     started_count_elem.innerText = started_count;
-     wait_count_elem = document.getElementById("wait_task_count");
-     wait_count_elem.innerText = wait_count;
- }
-</script>
-<div class="cont_principal">
-    <ul class="kanban_column" >
-        <il>
-            <div class="cont_titulo_cont_wo_count">
-                <h3>BACKLOG</h3>
-            </div>
-            <div class="cont_princ_lists">
-                <ul id='todo_list'>
-                    <!-- <li class="list_todo"></li>
-                         <li class="list_scheduled"></li>
-                       -->
-                </ul>
-            </div>
-        </il>
-        <il>
-            <div class="cont_titulo_cont_wo_count">
-                <h3>UPCOMING</h3>
-            </div>
-            <div class="cont_princ_lists">
-                <ul id='upcoming_list'>
-                    <!-- <li class="list_todo"></li>
-                         <li class="list_scheduled"></li>
-                       -->
-                </ul>
-            </div>
-        </il>
-        <il>
-            <div class="cont_titulo_cont_w_count">
-                <h3>DO-TODAY</h3>
-            </div>
-            <div class="cont_add_titulo_cont">
-                <i id="scheduled_task_count" class="material-icons"></i>
-            </div>
-            <div class="cont_princ_lists">
-                <ul id='scheduled_list'>
-                    <!-- <li class="list_todo"></li>
-                         <li class="list_scheduled"></li>
-                       -->
-                </ul>
-            </div>
-        </il>
-        <il>
-            <div class="cont_titulo_cont_w_count">
-                <h3>IN-PROGRESS</h3>
-            </div>
-            <div class="cont_add_titulo_cont">
-                <i id="started_task_count" class="material-icons"></i>
-            </div>
-            <div class="cont_princ_lists">
-                <ul id='started_list'>
-                    <!-- <li class="list_todo"></li>
-                         <li class="list_scheduled"></li>
-                       -->
-                </ul>
-            </div>
-        </il>
-        <il>
-            <div class="cont_titulo_cont_w_count">
-                <h3>PENDING</h3>
-            </div>
-            <div class="cont_add_titulo_cont">
-                <i id="wait_task_count" class="material-icons"></i>
-            </div>
-            <div class="cont_princ_lists">
-                <ul id='wait_list'>
-                    <!-- <li class="list_todo"></li>
-                         <li class="list_scheduled"></li>
-                       -->
-                </ul>
-            </div>
-        </il>
-        <il>
-            <div class="cont_titulo_cont_wo_count">
-                <h3>DONE</h3>
-            </div>
-            <div class="cont_princ_lists">
-                <ul id='done_list'>
-                    <!-- <li class="list_todo"></li>
-                         <li class="list_scheduled"></li>
-                       -->
-                </ul>
-            </div>
-        </il>
-    </ul>
-</div>
-</body>
+             scheduled_count_elem = document.getElementById("scheduled_task_count");
+             scheduled_count_elem.innerText = scheduled_count;
+             started_count_elem = document.getElementById("started_task_count");
+             started_count_elem.innerText = started_count;
+             wait_count_elem = document.getElementById("wait_task_count");
+             wait_count_elem.innerText = wait_count;
+         }
+        </script>
+        <div class="cont_principal">
+            <ul class="kanban_column" >
+                <il>
+                    <div class="cont_titulo_cont_wo_count">
+                        <h3>BACKLOG</h3>
+                    </div>
+                    <div class="cont_princ_lists">
+                        <ul id='todo_list'>
+                            <!-- <li class="list_todo"></li>
+                                 <li class="list_scheduled"></li>
+                               -->
+                        </ul>
+                    </div>
+                </il>
+                <il>
+                    <div class="cont_titulo_cont_wo_count">
+                        <h3>UPCOMING</h3>
+                    </div>
+                    <div class="cont_princ_lists">
+                        <ul id='upcoming_list'>
+                            <!-- <li class="list_todo"></li>
+                                 <li class="list_scheduled"></li>
+                               -->
+                        </ul>
+                    </div>
+                </il>
+                <il>
+                    <div class="cont_titulo_cont_w_count">
+                        <h3>DO-TODAY</h3>
+                    </div>
+                    <div class="cont_add_titulo_cont">
+                        <i id="scheduled_task_count" class="material-icons"></i>
+                    </div>
+                    <div class="cont_princ_lists">
+                        <ul id='scheduled_list'>
+                            <!-- <li class="list_todo"></li>
+                                 <li class="list_scheduled"></li>
+                               -->
+                        </ul>
+                    </div>
+                </il>
+                <il>
+                    <div class="cont_titulo_cont_w_count">
+                        <h3>IN-PROGRESS</h3>
+                    </div>
+                    <div class="cont_add_titulo_cont">
+                        <i id="started_task_count" class="material-icons"></i>
+                    </div>
+                    <div class="cont_princ_lists">
+                        <ul id='started_list'>
+                            <!-- <li class="list_todo"></li>
+                                 <li class="list_scheduled"></li>
+                               -->
+                        </ul>
+                    </div>
+                </il>
+                <il>
+                    <div class="cont_titulo_cont_w_count">
+                        <h3>PENDING</h3>
+                    </div>
+                    <div class="cont_add_titulo_cont">
+                        <i id="wait_task_count" class="material-icons"></i>
+                    </div>
+                    <div class="cont_princ_lists">
+                        <ul id='wait_list'>
+                            <!-- <li class="list_todo"></li>
+                                 <li class="list_scheduled"></li>
+                               -->
+                        </ul>
+                    </div>
+                </il>
+                <il>
+                    <div class="cont_titulo_cont_wo_count">
+                        <h3>DONE</h3>
+                    </div>
+                    <div class="cont_princ_lists">
+                        <ul id='done_list'>
+                            <!-- <li class="list_todo"></li>
+                                 <li class="list_scheduled"></li>
+                               -->
+                        </ul>
+                    </div>
+                </il>
+            </ul>
+        </div>
+    </body>
 </html>
