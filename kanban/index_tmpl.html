@@ -10,7 +10,7 @@
          .cont_principal {
              position: absolute;
              /* XXX: hard-coded */
-             width: 3340px;
+             width: 3860px;
              height: 100%;
              overflow: auto;
              background: rgb(250,249,247);
@@ -274,6 +274,16 @@
              color: #EF8A18;
          }
 
+         .list_suspended > .col_md_1_list {
+             border-left: 4px solid #2A476B;
+             color: #2A476B;
+         }
+
+         .list_suspended span {
+             font-weight: bold;
+             color: #2A476B;
+         }
+
          .list_scheduled > .col_md_1_list {
              border-left: 4px solid #EF8A18;
              color: #EF8A18;
@@ -303,8 +313,9 @@
 
          window.onload = function () {
 
-             $("html,body").animate({ scrollLeft: 1000 }, "fast");
+             $("html,body").animate({ scrollLeft: 1470 }, "fast");
 
+             suspended_count = 0;
              scheduled_count = 0;
              started_count = 0;
              wait_count = 0;
@@ -312,6 +323,12 @@
              tasks.forEach(function (task) {
 
                  switch (task['state']) {
+                     case "SUSPENDED":
+                         list_id = 'suspended_list'
+                         li_class_name = 'list_suspended'
+                         done_date = ''
+                         suspended_count ++;
+                         break;
                      case "SCHEDULED":
                          list_id = 'scheduled_list'
                          li_class_name = 'list_scheduled'
@@ -391,6 +408,8 @@
                  list_root.appendChild(elem);
              });
 
+             suspended_count_elem = document.getElementById("suspended_task_count");
+             suspended_count_elem.innerText = suspended_count;
              scheduled_count_elem = document.getElementById("scheduled_task_count");
              scheduled_count_elem.innerText = scheduled_count;
              started_count_elem = document.getElementById("started_task_count");
@@ -419,6 +438,21 @@
                     </div>
                     <div class="cont_princ_lists">
                         <ul id='upcoming_list'>
+                            <!-- <li class="list_todo"></li>
+                                 <li class="list_scheduled"></li>
+                               -->
+                        </ul>
+                    </div>
+                </il>
+                <il>
+                    <div class="cont_titulo_cont_w_count">
+                        <h3>SUSPENDED</h3>
+                    </div>
+                    <div class="cont_add_titulo_cont">
+                        <i id="suspended_task_count" class="material-icons"></i>
+                    </div>
+                    <div class="cont_princ_lists">
+                        <ul id='suspended_list'>
                             <!-- <li class="list_todo"></li>
                                  <li class="list_scheduled"></li>
                                -->
